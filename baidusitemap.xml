@@ -4,6 +4,26 @@
 
     
   <url>
+    <loc>https://blog.monbuilder.top/2018/07/20/conf-os/</loc>
+    <lastmod>2018-07-20T05:19:13.736Z</lastmod>
+    <data>
+        <display>
+        <title>搭建大数据平台系列(0)-机器准备</title>
+        <pubTime>2018-07-20T05:16:05.000Z</pubTime>
+        
+        <tag>hadoop centos</tag>
+         
+         
+           
+             
+              <breadCrumb title="大数据" url="https://blog.monbuilder.top/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://blog.monbuilder.top/2018/06/22/build-blog/</loc>
     <lastmod>2018-06-27T09:14:42.305Z</lastmod>
     <data>
