@@ -4,6 +4,41 @@
 
     
   <url>
+    <loc>https://blog.monbuilder.top/2018/10/24/rabbitmq/</loc>
+    <lastmod>2018-10-24T02:38:21.302Z</lastmod>
+    <data>
+        <display>
+        <title>rabbitMQ的介绍与安装使用</title>
+        <pubTime>2018-10-24T01:47:37.000Z</pubTime>
+        
+        <tag>rabbitMQ 分布式</tag>
+         
+         
+           
+             
+              <breadCrumb title="消息中间件" url="https://blog.monbuilder.top/categories/%E6%B6%88%E6%81%AF%E4%B8%AD%E9%97%B4%E4%BB%B6/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://blog.monbuilder.top/2018/10/16/activiti6-tutorial00/</loc>
+    <lastmod>2018-10-16T03:02:23.498Z</lastmod>
+    <data>
+        <display>
+        <title>activiti6-tutorial00</title>
+        <pubTime>2018-10-16T03:02:23.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://blog.monbuilder.top/2018/09/21/websphere-monitor/</loc>
     <lastmod>2018-09-21T09:28:40.299Z</lastmod>
     <data>
