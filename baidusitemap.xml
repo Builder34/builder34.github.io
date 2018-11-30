@@ -4,8 +4,28 @@
 
     
   <url>
+    <loc>https://blog.monbuilder.top/2018/11/05/zookeeper/</loc>
+    <lastmod>2018-11-05T08:14:49.526Z</lastmod>
+    <data>
+        <display>
+        <title>搭建大数据平台系列(2)-zookeeper环境搭建</title>
+        <pubTime>2018-11-05T08:08:10.000Z</pubTime>
+        
+        <tag>Hadoop</tag>
+         
+         
+           
+             
+              <breadCrumb title="大数据" url="https://blog.monbuilder.top/categories/%E5%A4%A7%E6%95%B0%E6%8D%AE/"/>
+          
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://blog.monbuilder.top/2018/10/24/rabbitmq/</loc>
-    <lastmod>2018-10-25T08:37:03.543Z</lastmod>
+    <lastmod>2018-10-31T06:59:45.212Z</lastmod>
     <data>
         <display>
         <title>rabbitMQ的介绍与安装使用</title>
