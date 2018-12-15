@@ -1,21 +1,613 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Builder34的个人博客..."><meta name="keywords" content="Java 数据库 分布式 生活"><title>搭建大数据平台系列(2)-zookeeper环境搭建 | 抹布先生M</title><link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1"><link rel="stylesheet" type="text/css" href="/css/donate.css"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">搭建大数据平台系列(2)-zookeeper环境搭建</h1><a id="logo" href="/.">抹布先生M</a><p class="description">记录技术与生活,keep coding</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="Arama"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">搭建大数据平台系列(2)-zookeeper环境搭建</h1><div class="post-meta"><a href="/2018/11/05/zookeeper/#comments" class="comment-count"></a><p><span class="date">Nov 05, 2018</span><span><a href="/categories/大数据/" class="category">大数据</a></span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>点击</i></i></span></p></div><div class="post-content"><h2 id="1-安装步骤"><a href="#1-安装步骤" class="headerlink" title="1.安装步骤"></a>1.安装步骤</h2><p>Zookeeper集群一般配置奇数个，在本次测试机是部署到slave1，slave2，slave3这3台机器上。<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>.下载zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>.tar.gz到slave1机器的~/bigdataspacce文件夹下</span><br><span class="line"><span class="number">2</span>.解压安装包的命令：</span><br><span class="line">[hadoop@slave1 bigdataspace]$  tar -zxvf zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>.tar.gz</span><br><span class="line"><span class="number">3</span>.解压完成后删除压缩包：</span><br><span class="line">[hadoop@slave1 bigdataspace]$  rm zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>.tar.gz</span><br><span class="line"><span class="number">4</span>.配置zoo.cfg文件</span><br><span class="line">     $  cd /home/hadoop/bigdataspace/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/conf</span><br><span class="line">     $  cp zoo_sample.cfg zoo.cfg</span><br><span class="line">     $  vi zoo.cfg</span><br><span class="line">        (修改文件中的dataDir配置)</span><br><span class="line">        dataDir=/data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/data</span><br><span class="line">        dataLogDir=/data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/dataLog/</span><br><span class="line">（并在clientPort下面新增如下配置）</span><br><span class="line">server<span class="meta">.1</span>=slave1:<span class="number">2888</span>:<span class="number">3888</span></span><br><span class="line">server<span class="meta">.2</span>=slave2:<span class="number">2888</span>:<span class="number">3888</span></span><br><span class="line">server<span class="meta">.3</span>=slave3:<span class="number">2888</span>:<span class="number">3888</span></span><br><span class="line"><span class="number">5</span>.建立dataDir对应路径的文件夹，并进入该data文件夹下新建一个文件myid：</span><br><span class="line">    $ mkdir -p  /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/dataLog</span><br><span class="line">$ mkdir -p  /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/data</span><br><span class="line">    $ cd /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/data</span><br><span class="line">    $ vi myid</span><br><span class="line">    (myid文件内容为zoo.cfg中配的server号码，如server<span class="meta">.1</span>则myid文件中只保存<span class="number">1</span>，每台机器都配自己对应的号码)</span><br><span class="line">    $ cat myid</span><br><span class="line">    <span class="number">1</span></span><br><span class="line">    $</span><br><span class="line"><span class="number">6</span>.以上对zookeeper的配置基本完成，下面使用scp把zookeeper发到各个节点：</span><br><span class="line">$  scp -r zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/ hadoop@slave2:~/bigdataspace/</span><br><span class="line">$  scp -r zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/ hadoop@slave3:~/bigdataspace/</span><br><span class="line"><span class="number">7</span>.通过scp把myid传到各个节点，并修改其zoo.cfg配置文件对应的server号码</span><br><span class="line">(如server<span class="meta">.2</span>=slave1:<span class="number">52888</span>:<span class="number">53888</span>则myid文件存入<span class="number">2</span>)</span><br><span class="line">    $  scp -r /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/ hadoop@slave2:/data/</span><br><span class="line">    $  scp -r /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/ hadoop@slave3:/data/</span><br><span class="line">    (然后到到各个节点上修改/data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/data/myid文件),如：</span><br><span class="line">    [hadoop@slave2 ~]$ vi  /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/data/myid</span><br><span class="line">    <span class="number">2</span></span><br><span class="line">    [hadoop@slave2 ~]$</span><br><span class="line"><span class="number">8.</span>zookeeper.out以及log4j日志文件的设置</span><br><span class="line">[hadoop@slave1 ~]$ cd /home/hadoop/bigdataspace/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/conf</span><br><span class="line">[hadoop@slave1 conf]$ vi log4j.properties</span><br><span class="line"># Define some <span class="meta">default</span> values that can be overridden by system properties</span><br><span class="line">zookeeper.root.logger=INFO, ROLLINGFILE</span><br><span class="line">……</span><br><span class="line">log4j.appender.ROLLINGFILE=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">查看zkServer.sh脚本，发现运行时会先加载zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/libexec/zkEnv.sh，不存在会加载zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/bin/zkEnv.sh</span><br><span class="line">[hadoop@slave1 ~]$ cd /home/hadoop/bigdataspace/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/libexec</span><br><span class="line">[hadoop@slave1 libexec]$ vi  zkEnv.sh</span><br><span class="line">if [ <span class="string">"x$&#123;ZOO_LOG_DIR&#125;"</span> = <span class="string">"x"</span> ]</span><br><span class="line">then</span><br><span class="line">    ZOO_LOG_DIR=<span class="string">"/data/zookeeper-3.4.5-cdh5.5.0/logs"</span></span><br><span class="line">fi</span><br><span class="line">if [ <span class="string">"x$&#123;ZOO_LOG4J_PROP&#125;"</span> = <span class="string">"x"</span> ]</span><br><span class="line">then</span><br><span class="line">ZOO_LOG4J_PROP=<span class="string">"INFO,ROLLINGFILE"</span></span><br><span class="line">也可以把zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/bin/zkEnv.sh文件的配置修改成上面一样.</span><br></pre></td></tr></table></figure></p>
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>搭建大数据平台系列(2)-zookeeper环境搭建 | Hexo</title>
+  <meta name="description" content="1.安装步骤Zookeeper集群一般配置奇数个，在本次测试机是部署到slave1，slave2，slave3这3台机器上。1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253541.下载zookeeper-3.4.5-cdh5.5.0.tar.gz到sla">
+<meta name="keywords" content="大数据 zookeeper">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建大数据平台系列(2)-zookeeper环境搭建">
+<meta property="og:url" content="https://blog.monbuilder.top/2018/11/05/zookeeper/index.html">
+<meta property="og:site_name" content="抹布先生M">
+<meta property="og:description" content="1.安装步骤Zookeeper集群一般配置奇数个，在本次测试机是部署到slave1，slave2，slave3这3台机器上。1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253541.下载zookeeper-3.4.5-cdh5.5.0.tar.gz到sla">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-14T06:14:20.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搭建大数据平台系列(2)-zookeeper环境搭建">
+<meta name="twitter:description" content="1.安装步骤Zookeeper集群一般配置奇数个，在本次测试机是部署到slave1，slave2，slave3这3台机器上。1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253541.下载zookeeper-3.4.5-cdh5.5.0.tar.gz到sla">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.monbuilder.top/2018/11/05/zookeeper/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="抹布先生M" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo博客/">hexo博客</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/webSphere/">webSphere</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/消息中间件/">消息中间件</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/面试/">面试</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/">Hadoop</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java面试/">Java面试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ-分布式/">rabbitMQ 分布式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能监控/">性能监控</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Hadoop/" style="font-size: 14px;">Hadoop</a> <a href="/tags/Java面试/" style="font-size: 13px;">Java面试</a> <a href="/tags/hexo/" style="font-size: 13px;">hexo</a> <a href="/tags/rabbitMQ-分布式/" style="font-size: 13px;">rabbitMQ 分布式</a> <a href="/tags/性能监控/" style="font-size: 13px;">性能监控</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/12/14/hello-world/" class="title">Hello World</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-14T06:14:20.387Z" itemprop="datePublished">2018-12-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/大数据/">大数据</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/12/13/hbase/" class="title">搭建大数据平台系列(3)-hbase环境搭建</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-13T09:21:59.000Z" itemprop="datePublished">2018-12-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/大数据/">大数据</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/11/05/zookeeper/" class="title">搭建大数据平台系列(2)-zookeeper环境搭建</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-11-05T08:08:10.000Z" itemprop="datePublished">2018-11-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/消息中间件/">消息中间件</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/10/24/rabbitmq/" class="title">rabbitMQ的介绍与安装使用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-24T01:47:37.000Z" itemprop="datePublished">2018-10-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/10/16/activiti6-tutorial00/" class="title">activiti6-tutorial00</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-16T03:02:23.000Z" itemprop="datePublished">2018-10-16</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-zookeeper" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      搭建大数据平台系列(2)-zookeeper环境搭建
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/11/05/zookeeper/" class="article-date">
+	  <time datetime="2018-11-05T08:08:10.000Z" itemprop="datePublished">2018-11-05</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/大数据/">大数据</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Hadoop/">Hadoop</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/11/05/zookeeper/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="1-安装步骤"><a href="#1-安装步骤" class="headerlink" title="1.安装步骤"></a>1.安装步骤</h2><p>Zookeeper集群一般配置奇数个，在本次测试机是部署到slave1，slave2，slave3这3台机器上。<br><figure class="highlight x86asm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span>.下载zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>.tar.gz到slave1机器的~/bigdataspacce文件夹下</span><br><span class="line"><span class="number">2</span>.解压安装包的命令：</span><br><span class="line">[hadoop@slave1 bigdataspace]$  tar -zxvf zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>.tar.gz</span><br><span class="line"><span class="number">3</span>.解压完成后删除压缩包：</span><br><span class="line">[hadoop@slave1 bigdataspace]$  rm zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>.tar.gz</span><br><span class="line"><span class="number">4</span>.配置zoo.cfg文件</span><br><span class="line">     $  cd /home/hadoop/bigdataspace/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/conf</span><br><span class="line">     $  cp zoo_sample.cfg zoo.cfg</span><br><span class="line">     $  vi zoo.cfg</span><br><span class="line">        (修改文件中的dataDir配置)</span><br><span class="line">        dataDir=/data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/data</span><br><span class="line">        dataLogDir=/data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/dataLog/</span><br><span class="line">（并在clientPort下面新增如下配置）</span><br><span class="line">server<span class="meta">.1</span>=slave1:<span class="number">2888</span>:<span class="number">3888</span></span><br><span class="line">server<span class="meta">.2</span>=slave2:<span class="number">2888</span>:<span class="number">3888</span></span><br><span class="line">server<span class="meta">.3</span>=slave3:<span class="number">2888</span>:<span class="number">3888</span></span><br><span class="line"><span class="number">5</span>.建立dataDir对应路径的文件夹，并进入该data文件夹下新建一个文件myid：</span><br><span class="line">    $ mkdir -p  /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/dataLog</span><br><span class="line">$ mkdir -p  /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/data</span><br><span class="line">    $ cd /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/data</span><br><span class="line">    $ vi myid</span><br><span class="line">    (myid文件内容为zoo.cfg中配的server号码，如server<span class="meta">.1</span>则myid文件中只保存<span class="number">1</span>，每台机器都配自己对应的号码)</span><br><span class="line">    $ cat myid</span><br><span class="line">    <span class="number">1</span></span><br><span class="line">    $</span><br><span class="line"><span class="number">6</span>.以上对zookeeper的配置基本完成，下面使用scp把zookeeper发到各个节点：</span><br><span class="line">$  scp -r zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/ hadoop@slave2:~/bigdataspace/</span><br><span class="line">$  scp -r zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/ hadoop@slave3:~/bigdataspace/</span><br><span class="line"><span class="number">7</span>.通过scp把myid传到各个节点，并修改其zoo.cfg配置文件对应的server号码</span><br><span class="line">(如server<span class="meta">.2</span>=slave1:<span class="number">52888</span>:<span class="number">53888</span>则myid文件存入<span class="number">2</span>)</span><br><span class="line">    $  scp -r /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/ hadoop@slave2:/data/</span><br><span class="line">    $  scp -r /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/ hadoop@slave3:/data/</span><br><span class="line">    (然后到到各个节点上修改/data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/data/myid文件),如：</span><br><span class="line">    [hadoop@slave2 ~]$ vi  /data/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/var/data/myid</span><br><span class="line">    <span class="number">2</span></span><br><span class="line">    [hadoop@slave2 ~]$</span><br><span class="line"><span class="number">8.</span>zookeeper.out以及log4j日志文件的设置</span><br><span class="line">[hadoop@slave1 ~]$ cd /home/hadoop/bigdataspace/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/conf</span><br><span class="line">[hadoop@slave1 conf]$ vi log4j.properties</span><br><span class="line"># Define some <span class="meta">default</span> values that can be overridden by system properties</span><br><span class="line">zookeeper.root.logger=INFO, ROLLINGFILE</span><br><span class="line">……</span><br><span class="line">log4j.appender.ROLLINGFILE=org.apache.log4j.DailyRollingFileAppender</span><br><span class="line">查看zkServer.sh脚本，发现运行时会先加载zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/libexec/zkEnv.sh，不存在会加载zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/bin/zkEnv.sh</span><br><span class="line">[hadoop@slave1 ~]$ cd /home/hadoop/bigdataspace/zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/libexec</span><br><span class="line">[hadoop@slave1 libexec]$ vi  zkEnv.sh</span><br><span class="line">if [ <span class="string">"x$&#123;ZOO_LOG_DIR&#125;"</span> = <span class="string">"x"</span> ]</span><br><span class="line">then</span><br><span class="line">    ZOO_LOG_DIR=<span class="string">"/data/zookeeper-3.4.5-cdh5.5.0/logs"</span></span><br><span class="line">fi</span><br><span class="line">if [ <span class="string">"x$&#123;ZOO_LOG4J_PROP&#125;"</span> = <span class="string">"x"</span> ]</span><br><span class="line">then</span><br><span class="line">ZOO_LOG4J_PROP=<span class="string">"INFO,ROLLINGFILE"</span></span><br><span class="line">也可以把zookeeper-<span class="number">3.4</span><span class="meta">.5</span>-cdh5<span class="meta">.5</span><span class="meta">.0</span>/bin/zkEnv.sh文件的配置修改成上面一样.</span><br></pre></td></tr></table></figure></p>
 <figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">9</span>.启动zookeeper服务：</span><br><span class="line">    [hadoop<span class="variable">@slave1</span> ~]<span class="variable">$ </span>cd /home/hadoop/bigdataspace/zookeeper-<span class="number">3.4</span>.<span class="number">5</span>-cdh5.<span class="number">5.0</span>/bin</span><br><span class="line">    [hadoop<span class="variable">@slave1</span> bin]<span class="variable">$ </span>./ zkServer.sh start   <span class="comment">#启动zookeeper（每台机器都要执行此命令）</span></span><br></pre></td></tr></table></figure>
 <h2 id="2-验证"><a href="#2-验证" class="headerlink" title="2.验证"></a>2.验证</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    [hadoop@slave1 bin]$ jps   #使用jps命令</span><br><span class="line">    <span class="number">25906</span> Jps</span><br><span class="line"><span class="number">20536</span> QuorumPeerMain   #zookeeper的进程</span><br><span class="line"><span class="number">19994</span> JobHistoryServer</span><br><span class="line"><span class="number">19068</span> NameNode</span><br><span class="line"><span class="number">19422</span> ResourceManager</span><br><span class="line"><span class="number">19263</span> SecondaryNameNode</span><br></pre></td></tr></table></figure>
 <p>如上，含有QuorumPeerMain表明安装成功<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master bin]$ ./ zkServer.sh stop   #停止zookeeper（每台机器都要执行此命令）</span><br><span class="line">[hadoop@master bin]$ ./zkServer.sh status  #查看角色状态命令</span><br><span class="line">JMX enabled by default</span><br><span class="line">Using config: /home/hadoop/bigdataspace/zookeeper-3.4.5-cdh5.5.0/bin/<span class="built_in">..</span>/conf/zoo.cfg</span><br><span class="line">Mode: follower</span><br><span class="line">（Mode: follower/leader，leader这个角色只有一台机器，是通过zookeeper的选举算法产生）</span><br><span class="line">如果出现如下错误，</span><br><span class="line">[hadoop@master bin]$ ./zkServer.sh status</span><br><span class="line">JMX enabled by default</span><br><span class="line">Using config: /home/hadoop/bigdataspace/zookeeper-3.4.5-cdh5.5.0/bin/<span class="built_in">..</span>/conf/zoo.cfg</span><br><span class="line"><span class="builtin-name">Error</span> contacting service. It is probably <span class="keyword">not</span> running.</span><br><span class="line">极大可能是因为防火墙端口被限制了，可以打开这些被用到的端口</span><br><span class="line">(注意：只启用一台zookeeper也是会 出现这个错误，需要启动2台以上的节点)</span><br></pre></td></tr></table></figure></p>
-<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#进入zookeeper客户端的命令</span></span><br><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">bin</span>]$  bin/zkCli.sh -server <span class="literal">master</span>:<span class="number">2181</span></span><br></pre></td></tr></table></figure></div><div class="tags"><a href="/tags/Hadoop/">Hadoop</a></div><div class="post-donate"></div><div class="post-donate"><div id="donate_board" class="donate_bar center"><a id="btn_donate" href="javascript:;" title="打赏" class="btn_donate"></a><div class="donate_txt"> &uarr;<br>此文有用? 求鼓励哟!<br></div></div><div class="donate_guide donate_bar center hidden"><img src="/img/wxpay.gif" title="微信打赏" width="200px"><img src="/img/alipay.gif" title="支付宝打赏" width="200px" style="margin-left:20px;"></div><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script><script type="text/javascript">document.getElementById('btn_donate').onclick = function(){
-    $('.donate_board').toggleClass('hidden');
-    $('.donate_guide').toggleClass('hidden');
-}</script></div>#.post-share<div id="include">_partial/share</div><div class="post-nav"><a href="/2018/12/13/hbase/" class="pre">搭建大数据平台系列(3)-hbase环境搭建</a><a href="/2018/10/24/rabbitmq/" class="next">rabbitMQ的介绍与安装使用</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">文章目录</i></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-安装步骤"><span class="toc-text">1.安装步骤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-验证"><span class="toc-text">2.验证</span></a></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/12/13/hbase/">搭建大数据平台系列(3)-hbase环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/05/zookeeper/">搭建大数据平台系列(2)-zookeeper环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/24/rabbitmq/">rabbitMQ的介绍与安装使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/16/activiti6-tutorial00/">activiti6-tutorial00</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/21/websphere-monitor/">webSphere性能监控(JMX)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/16/interview-java2018/">2018版Java面试题汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/hadoop/">搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/20/conf-os/">搭建大数据平台系列(0)-机器准备</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/22/build-blog/">Hexo+Github Page搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/14/hello-world/">Hello World</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-gui"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo博客/">hexo博客</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/webSphere/">webSphere</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/消息中间件/">消息中间件</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/面试/">面试</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> 标签</i></div><div class="tagcloud"><a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/rabbitMQ-分布式/" style="font-size: 15px;">rabbitMQ 分布式</a> <a href="/tags/性能监控/" style="font-size: 15px;">性能监控</a> <a href="/tags/Java面试/" style="font-size: 15px;">Java面试</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> 归档</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> 友情链接</i></div><ul></ul><a href="https://github.com/Builder34" title="Builder34" target="_blank">Builder34</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">Baidu Site Haritası</a> |  <a href="/atom.xml">订阅</a> |  <a href="/about/">关于</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次</p><p><span> Copyright &copy;<a href="/." rel="nofollow">Builder Luo.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="https://busuanzi.ibruce.info/"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span><p> Hosted by<a href="https://pages.coding.me" style="font-weight: bold"> Coding Pages</a></p></p></div></div></div><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?747de0bb4772bd4908106c09b80c0ac8";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-  })();
-</script><script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script><script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["mshare","weixin","tsina","qzone","linkedin","fbook","twi","print","renren","sqq","evernotecn","bdysc","tqq","tqf","bdxc","kaixin001","tieba","douban","bdhome","thx","ibaidu","meilishuo","mogujie","diandian","huaban","duitang","hx","fx","youdao","sdo","qingbiji","people","xinhua","mail","isohu","yaolan","wealink","ty","iguba","h163","copy"],"bdPic":"","bdStyle":"1","bdSize":"16"},"share":{},"image":{"viewList":["tsina","qzone","weixin","fbook","twi","linkedin","youdao","evernotecn","mshare"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["tsina","qzone","weixin","fbook","twi","linkedin","youdao","evernotecn","mshare"]}};with(document)0[(getElementsByTagName('head')[0]||head).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script><script>var jiathis_config={
-    data_track_clickback:true,
-    summary:"",
-    shortUrl:true,
-    hideMore:false
-}</script><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script></body></html>
+<figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#进入zookeeper客户端的命令</span></span><br><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">bin</span>]$  bin/zkCli.sh -server <span class="literal">master</span>:<span class="number">2181</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.monbuilder.top/2018/11/05/zookeeper/" title="搭建大数据平台系列(2)-zookeeper环境搭建" target="_blank" rel="external">https://blog.monbuilder.top/2018/11/05/zookeeper/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/12/13/hbase/" title="搭建大数据平台系列(3)-hbase环境搭建"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/10/24/rabbitmq/" title="rabbitMQ的介绍与安装使用"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

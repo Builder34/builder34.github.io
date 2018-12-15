@@ -1,24 +1,616 @@
-<!DOCTYPE html><html lang="zh-CN"><head><meta http-equiv="content-type" content="text/html; charset=utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport"><meta content="yes" name="apple-mobile-web-app-capable"><meta content="black-translucent" name="apple-mobile-web-app-status-bar-style"><meta content="telephone=no" name="format-detection"><meta name="description" content="Builder34的个人博客..."><meta name="keywords" content="Java 数据库 分布式 生活"><title>2018版Java面试题汇总 | 抹布先生M</title><link rel="stylesheet" type="text/css" href="//fonts.neworld.org/css?family=Source+Code+Pro"><link rel="stylesheet" type="text/css" href="/css/style.css?v=2.0.1"><link rel="stylesheet" type="text/css" href="/css/highlight.css?v=2.0.1"><link rel="stylesheet" type="text/css" href="/css/donate.css"><link rel="Shortcut Icon" href="/favicon.ico"><link rel="bookmark" href="/favicon.ico"><link rel="apple-touch-icon" href="/apple-touch-icon.png"><link rel="apple-touch-icon-precomposed" href="/apple-touch-icon.png"></head><body><div class="body_container"><div id="header"><div class="site-name"><h1 class="hidden">2018版Java面试题汇总</h1><a id="logo" href="/.">抹布先生M</a><p class="description">记录技术与生活,keep coding</p></div><div id="nav-menu"><a href="/." class="current"><i class="fa fa-home"> 首页</i></a><a href="/archives/"><i class="fa fa-archive"> 归档</i></a><a href="/about/"><i class="fa fa-user"> 关于</i></a><a href="/atom.xml"><i class="fa fa-rss"> 订阅</i></a></div><div id="search-form"><div id="result-mask" class="hide"></div><label><input id="search-key" type="text" autocomplete="off" placeholder="Arama"></label><div id="result-wrap" class="hide"><div id="search-result"></div></div><div class="hide"><template id="search-tpl"><div class="item"><a href="/{path}" title="{title}"><div class="title">{title}</div><div class="time">{date}</div><div class="tags">{tags}</div></a></div></template></div></div></div><div id="layout" class="layout-g"><div class="layout-l"><div class="content_container"><div class="post"><h1 class="post-title">2018版Java面试题汇总</h1><div class="post-meta"><a href="/2018/08/16/interview-java2018/#comments" class="comment-count"></a><p><span class="date">Aug 16, 2018</span><span><a href="/categories/面试/" class="category">面试</a></span><span><i id="busuanzi_container_page_pv"><i id="busuanzi_value_page_pv"></i><i>点击</i></i></span></p></div><div class="post-content"><h2 id="1-Java集合框架"><a href="#1-Java集合框架" class="headerlink" title="1.Java集合框架"></a>1.Java集合框架</h2><h3 id="1-1-Hashtable与Hashmap的区别"><a href="#1-1-Hashtable与Hashmap的区别" class="headerlink" title="1.1 Hashtable与Hashmap的区别"></a>1.1 Hashtable与Hashmap的区别</h3><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">答：继承不同，hashtable继承自dictionary，hashmap继承自abstractmap。</span><br><span class="line">Hashtable: 生成一个新的，空的hashtable，使用默认的capacity容量为<span class="number">11</span>，factor增长因子为<span class="number">0.75</span>, 其实就是因为这个<span class="built_in">put</span>方法是synchronized的，所以可以保证其线程安全。</span><br><span class="line">Hashmap：允许<span class="literal">null</span> key/<span class="built_in">value</span>，线程不安全</span><br><span class="line">另外，ConcurrentHashMap所谓线程安全是如果没有哈希冲突使用compareAndSwapObject方式新增节点，如果哈希冲突的时候锁住哈希冲突的节点，这样新增的节点是线程安全的，而 ConcurrentHashMap又不像hashtable那样整个<span class="built_in">put</span>方法被锁定，所以性能比hashtable要好，因为这样不影响其他节点的插入和读取。（concurrenthashmap也不允许空键值，抛空指针异常，CAS是项乐观锁技术，当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。）</span><br></pre></td></tr></table></figure>
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>2018版Java面试题汇总 | Hexo</title>
+  <meta name="description" content="1.Java集合框架1.1 Hashtable与Hashmap的区别1234答：继承不同，hashtable继承自dictionary，hashmap继承自abstractmap。Hashtable: 生成一个新的，空的hashtable，使用默认的capacity容量为11，factor增长因子为0.75, 其实就是因为这个put方法是synchronized的，所以可以保证其线程安全。Hash">
+<meta name="keywords" content="Java面试 2018">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2018版Java面试题汇总">
+<meta property="og:url" content="https://blog.monbuilder.top/2018/08/16/interview-java2018/index.html">
+<meta property="og:site_name" content="抹布先生M">
+<meta property="og:description" content="1.Java集合框架1.1 Hashtable与Hashmap的区别1234答：继承不同，hashtable继承自dictionary，hashmap继承自abstractmap。Hashtable: 生成一个新的，空的hashtable，使用默认的capacity容量为11，factor增长因子为0.75, 其实就是因为这个put方法是synchronized的，所以可以保证其线程安全。Hash">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-14T06:14:20.397Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="2018版Java面试题汇总">
+<meta name="twitter:description" content="1.Java集合框架1.1 Hashtable与Hashmap的区别1234答：继承不同，hashtable继承自dictionary，hashmap继承自abstractmap。Hashtable: 生成一个新的，空的hashtable，使用默认的capacity容量为11，factor增长因子为0.75, 其实就是因为这个put方法是synchronized的，所以可以保证其线程安全。Hash">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.monbuilder.top/2018/08/16/interview-java2018/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="抹布先生M" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+  
+  
+</head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/cofess" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">昵称</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Web Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Shenzhen, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo博客/">hexo博客</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/webSphere/">webSphere</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/消息中间件/">消息中间件</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/面试/">面试</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/">Hadoop</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java面试/">Java面试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ-分布式/">rabbitMQ 分布式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能监控/">性能监控</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Hadoop/" style="font-size: 14px;">Hadoop</a> <a href="/tags/Java面试/" style="font-size: 13px;">Java面试</a> <a href="/tags/hexo/" style="font-size: 13px;">hexo</a> <a href="/tags/rabbitMQ-分布式/" style="font-size: 13px;">rabbitMQ 分布式</a> <a href="/tags/性能监控/" style="font-size: 13px;">性能监控</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/12/14/hello-world/" class="title">Hello World</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-14T06:14:20.387Z" itemprop="datePublished">2018-12-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/大数据/">大数据</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/12/13/hbase/" class="title">搭建大数据平台系列(3)-hbase环境搭建</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-13T09:21:59.000Z" itemprop="datePublished">2018-12-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/大数据/">大数据</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/11/05/zookeeper/" class="title">搭建大数据平台系列(2)-zookeeper环境搭建</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-11-05T08:08:10.000Z" itemprop="datePublished">2018-11-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/消息中间件/">消息中间件</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/10/24/rabbitmq/" class="title">rabbitMQ的介绍与安装使用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-24T01:47:37.000Z" itemprop="datePublished">2018-10-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/10/16/activiti6-tutorial00/" class="title">activiti6-tutorial00</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-16T03:02:23.000Z" itemprop="datePublished">2018-10-16</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-interview-java2018" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      2018版Java面试题汇总
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/08/16/interview-java2018/" class="article-date">
+	  <time datetime="2018-08-16T02:39:09.000Z" itemprop="datePublished">2018-08-16</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/面试/">面试</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Java面试/">Java面试</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/08/16/interview-java2018/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="1-Java集合框架"><a href="#1-Java集合框架" class="headerlink" title="1.Java集合框架"></a>1.Java集合框架</h2><h3 id="1-1-Hashtable与Hashmap的区别"><a href="#1-1-Hashtable与Hashmap的区别" class="headerlink" title="1.1 Hashtable与Hashmap的区别"></a>1.1 Hashtable与Hashmap的区别</h3><figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">答：继承不同，hashtable继承自dictionary，hashmap继承自abstractmap。</span><br><span class="line">Hashtable: 生成一个新的，空的hashtable，使用默认的capacity容量为<span class="number">11</span>，factor增长因子为<span class="number">0.75</span>, 其实就是因为这个<span class="built_in">put</span>方法是synchronized的，所以可以保证其线程安全。</span><br><span class="line">Hashmap：允许<span class="literal">null</span> key/<span class="built_in">value</span>，线程不安全</span><br><span class="line">另外，ConcurrentHashMap所谓线程安全是如果没有哈希冲突使用compareAndSwapObject方式新增节点，如果哈希冲突的时候锁住哈希冲突的节点，这样新增的节点是线程安全的，而 ConcurrentHashMap又不像hashtable那样整个<span class="built_in">put</span>方法被锁定，所以性能比hashtable要好，因为这样不影响其他节点的插入和读取。（concurrenthashmap也不允许空键值，抛空指针异常，CAS是项乐观锁技术，当多个线程尝试使用CAS同时更新同一个变量时，只有其中一个线程能更新变量的值，而其它线程都失败，失败的线程并不会被挂起，而是被告知这次竞争中失败，并可以再次尝试。）</span><br></pre></td></tr></table></figure>
 <h3 id="1-2-arraylist-linkedlist-vector-区别"><a href="#1-2-arraylist-linkedlist-vector-区别" class="headerlink" title="1.2 arraylist linkedlist vector 区别"></a>1.2 arraylist linkedlist vector 区别</h3><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">答：<span class="number">1.</span> 对ArrayList和LinkedList而言，在列表末尾增加一个元素所花的开销都是固定的。对ArrayList而言，主要是在内部数组中增加一项，指向所添加的元素，偶尔可能会导致对数组重新进行分配；而对LinkedList而言，这个开销是统一的，分配一个内部Entry对象。</span><br><span class="line">    <span class="number">2.</span> 在ArrayList的中间插入或删除一个元素意味着这个列表中剩余的元素都会被移动；而在LinkedList的中间插入或删除一个元素的开销是固定的。</span><br><span class="line">    <span class="number">3.</span> LinkedList不支持高效的随机元素访问。</span><br><span class="line">    <span class="number">4.</span> ArrayList的空间浪费主要体现在在<span class="type">list</span>列表的结尾预留一定的容量空间，而LinkedList的空间花费则体现在它的每一个元素都需要消耗相当的空间</span><br><span class="line">可以这样说：当操作是在一列数据的后面添加数据而不是在前面或中间,并且需要随机地访问其中的元素时,使用ArrayList会提供比较好的性能；当你的操作是在一列数据的前面或中间添加或删除数据,并且按照顺序访问其中的元素时,就应该使用LinkedList了。</span><br><span class="line">    (遗留问题：在长度为<span class="number">10000</span>的链表和数组中分别随机插入一个元素，哪个效率更高？【<span class="number">58</span>到家面试题】答案是：数组。为啥？)</span><br></pre></td></tr></table></figure>
 <h3 id="1-3-Java-集合部分都有哪些接口，主要体现了哪些设计模式？"><a href="#1-3-Java-集合部分都有哪些接口，主要体现了哪些设计模式？" class="headerlink" title="1.3 Java 集合部分都有哪些接口，主要体现了哪些设计模式？"></a>1.3 Java 集合部分都有哪些接口，主要体现了哪些设计模式？</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">答：Java 集合部分主要有Collection、<span class="built_in">List</span>、<span class="built_in">Set</span>、<span class="built_in">Map</span>、Comparator、<span class="built_in">Iterator</span> 等，主要体现的设计模式是策略模式和迭代模式</span><br><span class="line">策略模式主要体现在每个接口有不同的实现，可以完成互换，如<span class="built_in">List</span> 接口下有ArrayList 和LinkedList,在不同的场景下可以互换。</span><br><span class="line">迭代模式主要体现在<span class="built_in">Iterator</span> 的实现，为不同的数据存储方式(数组、链表、散列表等)提供了统一的访问方式。</span><br><span class="line">Comparator 体现的设计模式是什么？ -- 策略模式，即不改变对象自身，而使用一个策略对象去改变它的行为。</span><br><span class="line">注：策略模式的优缺点是什么：</span><br><span class="line">优点：（<span class="number">1</span>）将具体算法逻辑与客户类分离，（<span class="number">2</span>）避免了大量的<span class="keyword">if</span> <span class="keyword">else</span> 判断</span><br><span class="line">缺点：（<span class="number">1</span>）每个算法一个类，产生了太多的类，（<span class="number">2</span>）客户端要知道所有的策略类，以便决定使用哪一个。</span><br></pre></td></tr></table></figure>
 <h2 id="2-线程"><a href="#2-线程" class="headerlink" title="2.线程"></a>2.线程</h2><h3 id="2-1-线程五状态"><a href="#2-1-线程五状态" class="headerlink" title="2.1 线程五状态"></a>2.1 线程五状态</h3><figure class="highlight dockerfile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">新建、就绪、执行、阻塞、死亡</span><br><span class="line">其中，阻塞状态(Blocked)</span><br><span class="line">线程运行过程中，可能由于各种原因进入阻塞状态:</span><br><span class="line">     <span class="number">1</span>&gt;线程通过调用sleep方法进入睡眠状态；</span><br><span class="line">     <span class="number">2</span>&gt;线程调用一个在I/O上被阻塞的操作，即该操作在输入输出操作完成之前不会返回到它的调用者；</span><br><span class="line">     <span class="number">3</span>&gt;线程试图得到一个锁，而该锁正被其他线程持有；</span><br><span class="line">     <span class="number">4</span>&gt;线程在等待某个触发条件；</span><br><span class="line">所谓阻塞状态是正在运行的线程没有运行结束，暂时让出CPU，这时其他处于就绪状态的线程就可以获得CPU时间，进入运行状态。</span><br><span class="line">    死亡状态(Dead)</span><br><span class="line">有两个原因会导致线程死亡：</span><br><span class="line">    <span class="number">1</span>) <span class="keyword">run</span><span class="bash">方法正常退出而自然死亡，</span></span><br><span class="line"><span class="bash">    2) 一个未捕获的异常终止了run方法而使线程猝死。</span></span><br></pre></td></tr></table></figure>
 <h3 id="2-2-线程安全性的五种类别"><a href="#2-2-线程安全性的五种类别" class="headerlink" title="2.2 线程安全性的五种类别"></a>2.2 线程安全性的五种类别</h3><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">答：①. 不可变 -- 不可变的对象一定是线程安全的，并且永远也不需要额外的同步。Java 类库中大多数基本数值类如 Integer 、 String 和 BigInteger 都是不可变的。</span><br><span class="line">    ②. 线程安全 -- 线程安全的对象，由类的规格说明所规定的约束在对象被多个线程访问时仍然有效，不管运行时环境如何排列，线程都不需要任何额外的同步。这种线程安全性保证是很严格的 -- 许多类，如 Hashtable 或者 Vector都不能满足这种严格的定义。</span><br><span class="line">    ③. 有条件的线程安全 -- 有条件的线程安全类对于单独的操作可以是线程安全的，但是某些操作序列可能需要外部同步。条件线程安全的最常见的例子是遍历由 Hashtable 或者 Vector 或者返回的迭代器。</span><br><span class="line">    ④. 线程兼容 -- 线程兼容类不是线程安全的，但是可以通过正确使用同步而在并发环境中安全地使用。这可能意味着用一个 synchronized 块包围每一个方法调用，或者创建一个包装器对象，其中每一个方法都是同步的(就像 Collections.synchronizedList() 一样)。许多常见的类是线程兼容的，如集合类 ArrayList 和 HashMap 、 java.text.SimpleDateFormat 、或者 JDBC 类<span class="built_in"> Connection </span>和 ResultSet。</span><br><span class="line">    ⑤. 线程对立 -- 线程对立类是那些不管是否调用了外部同步都不能在并发使用时安全地呈现的类。线程对立很少见，当类修改静态数据，而静态数据会影响在其他线程中执行的其他类的行为，这时通常会出现线程对立。线程对立类的一个例子是调用 System.setOut() 的类。</span><br></pre></td></tr></table></figure>
 <h3 id="2-3-简单理解线程池技术"><a href="#2-3-简单理解线程池技术" class="headerlink" title="2.3 简单理解线程池技术"></a>2.3 简单理解线程池技术</h3><figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">多线程技术主要解决处理器单元内多个线程执行的问题，它可以显著减少处理器单元的闲置时间，增加处理器单元的吞吐能力。</span><br><span class="line">    假设一个服务器完成一项任务所需时间为：T1 创建线程时间，T2 在线程中执行任务的时间，T3 销毁线程时间。</span><br><span class="line">    如果：T1 + T3 远大于 T2，则可以采用线程池，以提高服务器性能。</span><br><span class="line">    一个线程池包括以下四个基本组成部分：</span><br><span class="line">    <span class="number">1</span>、线程池管理器（ThreadPool）：用于创建并管理线程池，包括 创建线程池，销毁线程池，添加新任务；</span><br><span class="line">    <span class="number">2</span>、工作线程（PoolWorker）：线程池中线程，在没有任务时处于等待状态，可以循环的执行任务；</span><br><span class="line">    <span class="number">3</span>、任务接口（<span class="keyword">Task</span>）：每个任务必须实现的接口，以供工作线程调度任务的执行，它主要规定了任务的入口，任务执行完后的收尾工作，任务的执行状态等；</span><br><span class="line">    <span class="number">4</span>、任务队列（taskQueue）：用于存放没有处理的任务。提供一种缓冲机制。</span><br><span class="line">    线程池技术正是关注如何缩短或调整T1,T3时间的技术，从而提高服务器程序性能的。它把T1，T3分别安排在服务器程序的启动和结束的时间段或者一些空闲的时间段，这样在服务器程序处理客户请求时，不会有T1，T3的开销了。</span><br><span class="line">    线程池不仅调整T1,T3产生的时间段，而且它还显著减少了创建线程的数目，看一个例子：</span><br><span class="line">    假设一个服务器一天要处理<span class="number">50000</span>个请求，并且每个请求需要一个单独的线程完成。在线程池中，线程数一般是固定的，所以产生线程总数不会超过线程池中线程的数目，而如果服务器不利用线程池来处理这些请求则线程总数为<span class="number">50000</span>。一般线程池大小是远小于<span class="number">50000</span>。所以利用线程池的服务器程序不会为了创建<span class="number">50000</span>而在处理请求时浪费时间，从而提高效率。</span><br><span class="line">代码实现中并没有实现任务接口，而是把Runnable对象加入到线程池管理器（ThreadPool），然后剩下的事情就由线程池管理器（ThreadPool）来完成了。</span><br><span class="line">Java通过Executors提供四种线程池，分别为：</span><br><span class="line">    newCachedThreadPool创建一个可缓存线程池，如果线程池长度超过处理需要，可灵活回收空闲线程，若无可回收，则新建线程。</span><br><span class="line">    newFixedThreadPool 创建一个定长线程池，可控制线程最大并发数，超出的线程会在队列中等待。</span><br><span class="line">    newScheduledThreadPool 创建一个定长线程池，支持定时及周期性任务执行。</span><br><span class="line">    newSingleThreadExecutor 创建一个单线程化的线程池，它只会用唯一的工作线程来执行任务，保证所有任务按照指定顺序(FIFO, LIFO, 优先级)执行。</span><br><span class="line"><span class="comment">// 执行任务,其实只是把任务加入任务队列，什么时候执行有线程池管理器觉定</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> execute(Runnable <span class="keyword">task</span>) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (taskQueue) &#123;</span><br><span class="line">            taskQueue.add(<span class="keyword">task</span>);</span><br><span class="line">            taskQueue.notify();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 批量执行任务,其实只是把任务加入任务队列，什么时候执行有线程池管理器觉定</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> execute(Runnable[] <span class="keyword">task</span>) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (taskQueue) &#123;</span><br><span class="line">            <span class="keyword">for</span> (Runnable t : <span class="keyword">task</span>)</span><br><span class="line">                taskQueue.add(t);</span><br><span class="line">            taskQueue.notify();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 批量执行任务,其实只是把任务加入任务队列，什么时候执行有线程池管理器觉定</span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> execute(List&lt;Runnable&gt; <span class="keyword">task</span>) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (taskQueue) &#123;</span><br><span class="line">            <span class="keyword">for</span> (Runnable t : <span class="keyword">task</span>)</span><br><span class="line">                taskQueue.add(t);</span><br><span class="line">            taskQueue.notify();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
 <h3 id="2-3-说一下synchronized原理"><a href="#2-3-说一下synchronized原理" class="headerlink" title="2.3 说一下synchronized原理"></a>2.3 说一下synchronized原理</h3><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">答：①.synchronized的字节码表示：</span><br><span class="line">      在java语言中存在两种内建的synchronized语法：1、synchronized语句；2、synchronized方法。对于synchronized语句当Java源代码被javac编译成bytecode的时候，会在同步块的入口位置和退出位置分别插入monitorenter和monitorexit字节码指令。而synchronized方法则会被翻译成普通的方法调用和返回指令如:invokevirtual、areturn指令，在VM字节码层面并没有任何特别的指令来实现被synchronized修饰的方法，而是在Class文件的方法表中将该方法的access_flags字段中的synchronized标志位置1，表示该方法是同步方法并使用调用该方法的对象或该方法所属的Class在JVM的内部对象表示Class做为锁对象。</span><br><span class="line">    ②.JVM中锁的优化：</span><br><span class="line">      简单来说在JVM中monitorenter和monitorexit字节码依赖于底层的操作系统的Mutex <span class="keyword">Lock</span>来实现的，但是由于使用<span class="keyword">Mutex</span> <span class="keyword">Lock</span>需要将当前线程挂起并从用户态切换到内核态来执行，这种切换的代价是非常昂贵的；然而在现实中的大部分情况下，同步方法是运行在单线程环境（无锁竞争环境）如果每次都调用<span class="keyword">Mutex</span> <span class="keyword">Lock</span>那么将严重的影响程序的性能。不过在jdk1<span class="number">.6</span>中对锁的实现引入了大量的优化，如锁粗化（<span class="keyword">Lock</span> Coarsening）、锁消除（<span class="keyword">Lock</span> Elimination）、轻量级锁（Lightweight Locking）、偏向锁（Biased Locking）、适应性自旋（Adaptive Spinning）等技术来减少锁操作的开销。</span><br><span class="line">    ③.在JVM中创建对象时会在对象前面加上两个字大小的对象头（<span class="keyword">Object</span> header），在<span class="number">32</span>位机器上一个字为<span class="number">32</span><span class="built_in">bit</span>，根据不同的状态位Mark World中存放不同的内容，在轻量级锁中，Mark Word被分成两部分，刚开始时LockWord为被设置为HashCode、最低三位表示LockWord所处的状态，初始状态为<span class="number">001</span>表示无锁状态。</span><br><span class="line">    ④.Monitor <span class="built_in">Record</span>是线程私有的数据结构，每一个线程都有一个可用monitor <span class="built_in">record</span>列表，同时还有一个全局的可用列表；那么这些monitor <span class="built_in">record</span>有什么用呢？每一个被锁住的对象都会和一个monitor <span class="built_in">record</span>关联（对象头中的LockWord指向monitor <span class="built_in">record</span>的起始地址，由于这个地址是<span class="number">8</span><span class="keyword">byte</span>对齐的所以LockWord的最低三位可以用来作为状态），同时monitor <span class="built_in">record</span>中有一个Owner字段存放拥有该锁的线程的唯一标识，表示该锁被这个线程占用。</span><br><span class="line">    ⑤.获取锁（monitorenter）的大概过程如下：</span><br><span class="line">      当对象处于无锁状态时（RecordWord值为HashCode，状态位为<span class="number">001</span>），线程首先从自己的可用moniter <span class="built_in">record</span>列表中取得一个空闲的moniter <span class="built_in">record</span>，初始Nest和Owner值分别被预先设置为<span class="number">1</span>和该线程自己的标识，一旦monitor <span class="built_in">record</span>准备好然后我们通过CAS原子指令安装该monitor <span class="built_in">record</span>的起始地址到对象头的LockWord字段来膨胀.</span><br><span class="line">      对象已经被膨胀同时Owner中保存的线程标识为获取锁的线程自己，这就是重入（reentrant）锁的情况，只需要简单的将Nest加<span class="number">1</span>即可。不需要任何原子操作，效率非常高</span><br><span class="line">      对象已膨胀但Owner的值为<span class="literal">NULL</span>，当一个锁上存在阻塞或等待的线程同时锁的前一个拥有者刚释放锁时会出现这种状态，此时多个线程通过CAS原子指令在多线程竞争状态下试图将Owner设置为自己的标识来获得锁，竞争失败的线程在则会进入到第四种情况的执行路径。</span><br><span class="line">      对象处于膨胀状态同时Owner不为<span class="literal">NULL</span>(被锁住)，在调用操作系统的重量级的互斥锁之前先自旋一定的次数，当达到一定的次数时如果仍然没有成功获得锁，则开始准备进入阻塞状态，首先将rfThis的值原子性的加<span class="number">1</span>，由于在加<span class="number">1</span>的过程中可能会被其他线程破坏<span class="keyword">Object</span>和monitor <span class="built_in">record</span>之间的关联，所以在原子性加<span class="number">1</span>后需要再进行一次比较以确保LockWord的值没有被改变，当发现被改变后则要重新进行monitorenter过程。同时再一次观察Owner是否为<span class="literal">NULL</span>，如果是则调用CAS参与竞争锁，锁竞争失败则进入到阻塞状态。</span><br><span class="line">    ⑥.释放锁（monitorexit）的大概过程如下：</span><br><span class="line">      首先检查该对象是否处于膨胀状态并且该线程是这个锁的拥有者，如果发现不对则抛出异常；</span><br><span class="line">      检查Nest字段是否大于<span class="number">1</span>，如果大于<span class="number">1</span>则简单的将Nest减<span class="number">1</span>并继续拥有锁，如果等于<span class="number">1</span>，则进入到下一步；</span><br><span class="line">      检查rfThis是否大于<span class="number">0</span>，设置Owner为<span class="literal">NULL</span>然后唤醒一个正在阻塞或等待的线程再一次试图获取锁，如果等于<span class="number">0</span>则进入到下一步；</span><br><span class="line">      缩小（deflate）一个对象，通过将对象的LockWord置换回原来的HashCode值来解除和monitor <span class="built_in">record</span>之间的关联来释放锁，同时将monitor <span class="built_in">record</span>放回到线程是有的可用monitor <span class="built_in">record</span>列表。</span><br></pre></td></tr></table></figure>
-</div><div class="tags"><a href="/tags/Java面试/">Java面试</a></div><div class="post-donate"></div><div class="post-donate"><div id="donate_board" class="donate_bar center"><a id="btn_donate" href="javascript:;" title="打赏" class="btn_donate"></a><div class="donate_txt"> &uarr;<br>此文有用? 求鼓励哟!<br></div></div><div class="donate_guide donate_bar center hidden"><img src="/img/wxpay.gif" title="微信打赏" width="200px"><img src="/img/alipay.gif" title="支付宝打赏" width="200px" style="margin-left:20px;"></div><script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script><script type="text/javascript">document.getElementById('btn_donate').onclick = function(){
-    $('.donate_board').toggleClass('hidden');
-    $('.donate_guide').toggleClass('hidden');
-}</script></div>#.post-share<div id="include">_partial/share</div><div class="post-nav"><a href="/2018/09/21/websphere-monitor/" class="pre">webSphere性能监控(JMX)</a><a href="/2018/08/09/hadoop/" class="next">搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]</a></div><div id="comments"></div></div></div></div><div class="layout-r"><div id="sidebar"><div class="search-pla"></div><div id="toc" class="widget"><div class="widget-title"><i class="fa fa-fei">文章目录</i></div><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-Java集合框架"><span class="toc-text">1.Java集合框架</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-Hashtable与Hashmap的区别"><span class="toc-text">1.1 Hashtable与Hashmap的区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-2-arraylist-linkedlist-vector-区别"><span class="toc-text">1.2 arraylist linkedlist vector 区别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-3-Java-集合部分都有哪些接口，主要体现了哪些设计模式？"><span class="toc-text">1.3 Java 集合部分都有哪些接口，主要体现了哪些设计模式？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-线程"><span class="toc-text">2.线程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-线程五状态"><span class="toc-text">2.1 线程五状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-线程安全性的五种类别"><span class="toc-text">2.2 线程安全性的五种类别</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-简单理解线程池技术"><span class="toc-text">2.3 简单理解线程池技术</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3-说一下synchronized原理"><span class="toc-text">2.3 说一下synchronized原理</span></a></li></ol></li></ol></div><div class="widget"><div class="widget-title"><i class="fa fa-xie"> 最新文章</i></div><ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/12/13/hbase/">搭建大数据平台系列(3)-hbase环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/11/05/zookeeper/">搭建大数据平台系列(2)-zookeeper环境搭建</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/24/rabbitmq/">rabbitMQ的介绍与安装使用</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/10/16/activiti6-tutorial00/">activiti6-tutorial00</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/09/21/websphere-monitor/">webSphere性能监控(JMX)</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/16/interview-java2018/">2018版Java面试题汇总</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/08/09/hadoop/">搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/07/20/conf-os/">搭建大数据平台系列(0)-机器准备</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/06/22/build-blog/">Hexo+Github Page搭建个人博客</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/04/14/hello-world/">Hello World</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-gui"> 分类</i></div><ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo博客/">hexo博客</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/webSphere/">webSphere</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/消息中间件/">消息中间件</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/面试/">面试</a><span class="category-list-count">1</span></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-biao"> 标签</i></div><div class="tagcloud"><a href="/tags/hexo/" style="font-size: 15px;">hexo</a> <a href="/tags/Hadoop/" style="font-size: 15px;">Hadoop</a> <a href="/tags/rabbitMQ-分布式/" style="font-size: 15px;">rabbitMQ 分布式</a> <a href="/tags/性能监控/" style="font-size: 15px;">性能监控</a> <a href="/tags/Java面试/" style="font-size: 15px;">Java面试</a></div></div><div class="widget"><div class="widget-title"><i class="fa fa-archive"> 归档</i></div><ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a></li></ul></div><div class="widget"><div class="widget-title"><i class="fa fa-you"> 友情链接</i></div><ul></ul><a href="https://github.com/Builder34" title="Builder34" target="_blank">Builder34</a></div></div></div></div><a id="totop" href="#top"></a><div id="footer"><div class="footer-info"><p><a href="/baidusitemap.xml">Baidu Site Haritası</a> |  <a href="/atom.xml">订阅</a> |  <a href="/about/">关于</a></p><p>本站总访问量：<i id="busuanzi_container_site_pv"><i id="busuanzi_value_site_pv"></i></i>次</p><p><span> Copyright &copy;<a href="/." rel="nofollow">Builder Luo.</a></span><span> Theme by<a rel="nofollow" target="_blank" href="https://github.com/chaooo/hexo-theme-BlueLake"> BlueLake.</a></span><span> Count by<a href="https://busuanzi.ibruce.info/"> busuanzi.</a></span><span> Powered by<a rel="nofollow" target="_blank" href="https://hexo.io"> Hexo.</a></span><p> Hosted by<a href="https://pages.coding.me" style="font-weight: bold"> Coding Pages</a></p></p></div></div></div><script src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js" async></script><script>var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?747de0bb4772bd4908106c09b80c0ac8";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-  })();
-</script><script type="text/javascript" src="/js/search.json.js?v=2.0.1"></script><script type="text/javascript" src="/js/toctotop.js?v=2.0.1" async></script><script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":["mshare","weixin","tsina","qzone","linkedin","fbook","twi","print","renren","sqq","evernotecn","bdysc","tqq","tqf","bdxc","kaixin001","tieba","douban","bdhome","thx","ibaidu","meilishuo","mogujie","diandian","huaban","duitang","hx","fx","youdao","sdo","qingbiji","people","xinhua","mail","isohu","yaolan","wealink","ty","iguba","h163","copy"],"bdPic":"","bdStyle":"1","bdSize":"16"},"share":{},"image":{"viewList":["tsina","qzone","weixin","fbook","twi","linkedin","youdao","evernotecn","mshare"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["tsina","qzone","weixin","fbook","twi","linkedin","youdao","evernotecn","mshare"]}};with(document)0[(getElementsByTagName('head')[0]||head).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
-</script><script>var jiathis_config={
-    data_track_clickback:true,
-    summary:"",
-    shortUrl:true,
-    hideMore:false
-}</script><script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script></body></html>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.monbuilder.top/2018/08/16/interview-java2018/" title="2018版Java面试题汇总" target="_blank" rel="external">https://blog.monbuilder.top/2018/08/16/interview-java2018/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/cofess" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/cofess" target="_blank"><span class="text-dark">昵称</span><small class="ml-1x">Web Developer &amp; Designer</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/09/21/websphere-monitor/" title="webSphere性能监控(JMX)"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/08/09/hadoop/" title="搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/cofess" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="http://weibo.com/cofess" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://twitter.com/iwebued" target="_blank" title="Twitter" data-toggle=tooltip data-placement=top><i class="icon icon-twitter"></i></a></li>
+        
+        <li><a href="https://www.behance.net/cofess" target="_blank" title="Behance" data-toggle=tooltip data-placement=top><i class="icon icon-behance"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
