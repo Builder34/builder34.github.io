@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce] | 抹布先生M</title>
+  <meta name="description" content="1.ssh免密码登录设置123[hadoop@master ~]$ ssh -versionOpenSSH_5.3p1, OpenSSL 1.0.1e-fips 11 Feb 2013Bad escape character &apos;rsion&apos;. 查看ssh的版本后，如果ssh未安装则需要执行如下安装命令：1[hadoop@master ~]$ sudo  yum  install openssh-s">
+<meta name="keywords" content="大数据 hadoop ssh免密码登录">
+<meta property="og:type" content="article">
+<meta property="og:title" content="搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]">
+<meta property="og:url" content="https://blog.monbuilder.top/2018/08/09/hadoop/index.html">
+<meta property="og:site_name" content="抹布先生M">
+<meta property="og:description" content="1.ssh免密码登录设置123[hadoop@master ~]$ ssh -versionOpenSSH_5.3p1, OpenSSL 1.0.1e-fips 11 Feb 2013Bad escape character &apos;rsion&apos;. 查看ssh的版本后，如果ssh未安装则需要执行如下安装命令：1[hadoop@master ~]$ sudo  yum  install openssh-s">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2018-12-14T06:14:20.398Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]">
+<meta name="twitter:description" content="1.ssh免密码登录设置123[hadoop@master ~]$ ssh -versionOpenSSH_5.3p1, OpenSSL 1.0.1e-fips 11 Feb 2013Bad escape character &apos;rsion&apos;. 查看ssh的版本后，如果ssh未安装则需要执行如下安装命令：1[hadoop@master ~]$ sudo  yum  install openssh-s">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.monbuilder.top/2018/08/09/hadoop/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="抹布先生M" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitment@0.0.3/style/default.min.css">
+  
+  
+  
+</head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/Builder34" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">抹布先生M</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Java Developer &amp; Designer</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Guangzhou, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/Builder34" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎关注公众交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo博客/">hexo博客</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/webSphere/">webSphere</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/消息中间件/">消息中间件</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/面试/">面试</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Hadoop/">Hadoop</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java面试/">Java面试</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/hexo/">hexo</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/rabbitMQ-分布式/">rabbitMQ 分布式</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/性能监控/">性能监控</a><span class="tag-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/大数据/">大数据</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/12/13/hbase/" class="title">搭建大数据平台系列(3)-hbase环境搭建</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-13T09:21:59.000Z" itemprop="datePublished">2018-12-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/大数据/">大数据</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/11/05/zookeeper/" class="title">搭建大数据平台系列(2)-zookeeper环境搭建</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-11-05T08:08:10.000Z" itemprop="datePublished">2018-11-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/消息中间件/">消息中间件</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/10/24/rabbitmq/" class="title">rabbitMQ的介绍与安装使用</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-24T01:47:37.000Z" itemprop="datePublished">2018-10-24</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2018/10/16/activiti6-tutorial00/" class="title">activiti6-tutorial00</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-10-16T03:02:23.000Z" itemprop="datePublished">2018-10-16</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/webSphere/">webSphere</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/09/21/websphere-monitor/" class="title">webSphere性能监控(JMX)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-09-21T08:12:32.000Z" itemprop="datePublished">2018-09-21</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-hadoop" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/08/09/hadoop/" class="article-date">
+	  <time datetime="2018-08-09T15:00:08.000Z" itemprop="datePublished">2018-08-09</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/大数据/">大数据</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Hadoop/">Hadoop</a>
+  </span>
+
+
+        
+
+	<span class="article-read hidden-xs">
+    	<i class="icon icon-eye-fill" aria-hidden="true"></i>
+    	<span id="/2018/08/09/hadoop/" class="leancloud_visitors"  data-flag-title="搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]">0</span>
+    </span>
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/08/09/hadoop/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2.9k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 14(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <h2 id="1-ssh免密码登录设置"><a href="#1-ssh免密码登录设置" class="headerlink" title="1.ssh免密码登录设置"></a>1.ssh免密码登录设置</h2><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master ~]$ ssh -version</span><br><span class="line">OpenSSH_5<span class="number">.3</span>p1, OpenSSL <span class="number">1.0</span><span class="number">.1</span>e-fips <span class="number">11</span> Feb <span class="number">2013</span></span><br><span class="line">Bad escape character 'rsion'.</span><br></pre></td></tr></table></figure>
+<p>查看ssh的版本后，如果ssh未安装则需要执行如下安装命令：<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">~]$</span> sudo  yum  install openssh-server</span><br></pre></td></tr></table></figure></p>
+<p>在每台机器上都执行一次下面的命令：<br><figure class="highlight tap"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$  ssh-keygen   –t   rsa     <span class="comment">#一路回车，提示要填的都默认不填，按回车</span></span><br><span class="line">上面执行完成后，每台机器上都会生成一个~/.ssh文件夹</span><br><span class="line">$  ll  ~/.ssh     <span class="comment">#查看.ssh文件下的文件列表</span></span><br><span class="line">-rw-------.<span class="number"> 1 </span>hadoop hadoop<span class="number"> 1580 </span>Apr<span class="number"> 18 </span>16:53 authorized_keys</span><br><span class="line">-rw-------.<span class="number"> 1 </span>hadoop hadoop<span class="number"> 1675 </span>Apr<span class="number"> 15 </span>16:01 id_rsa</span><br><span class="line">-rw-r--r--.<span class="number"> 1 </span>hadoop hadoop <span class="number"> 395 </span>Apr<span class="number"> 15 </span>16:01 id_rsa.pub</span><br></pre></td></tr></table></figure></p>
+<p>把slave1，slave2，slave3上生成的公钥id_rsa.pub发给master机器：<br>在slave1机器上：<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop<span class="variable">@slave1</span> ~]<span class="variable">$ </span>scp  ~<span class="regexp">/.ssh/id</span>_rsa.pub  hadoop<span class="variable">@master</span><span class="symbol">:~/</span>.ssh/id_rsa.pub.slave1</span><br></pre></td></tr></table></figure></p>
+<p>在slave2机器上：<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop<span class="variable">@slave2</span> ~]<span class="variable">$ </span>scp  ~<span class="regexp">/.ssh/id</span>_rsa.pub  hadoop<span class="variable">@master</span><span class="symbol">:~/</span>.ssh/id_rsa.pub.slave2</span><br></pre></td></tr></table></figure></p>
+<p>在slave3机器上：<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop<span class="variable">@slave3</span> ~]<span class="variable">$ </span>scp  ~<span class="regexp">/.ssh/id</span>_rsa.pub  hadoop<span class="variable">@master</span><span class="symbol">:~/</span>.ssh/id_rsa.pub.slave3</span><br></pre></td></tr></table></figure></p>
+<p>在master机器上，将所有公钥加到新增的用于认证的公钥文件authorized_keys中：<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master  ~]$  cat  ~<span class="regexp">/.ssh/id</span>_rsa.pub*  <span class="meta">&gt;&gt;  </span>~<span class="regexp">/.ssh/authorized</span>_keys</span><br></pre></td></tr></table></figure></p>
+<p>需要修改文件authorized_keys的权限（权限的设置非常重要，因为不安全的设置安全设置,会让你不能使用RSA功能 ）<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span>  <span class="title">~]$</span>  chmod  <span class="number">600</span>  ~/.ssh/authorized_keys  <span class="comment">#如果免密码不成功有可能缺少这步</span></span><br></pre></td></tr></table></figure></p>
+<p>将公钥文件authorized_keys分发给每台slave:<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hadoop<span class="variable">@master</span>  ~]<span class="variable">$ </span> scp  ~<span class="regexp">/.ssh/authorized</span>_keys   hadoop<span class="variable">@slave1</span><span class="symbol">:~/</span>.ssh/</span><br><span class="line">[hadoop<span class="variable">@master</span>  ~]<span class="variable">$ </span> scp  ~<span class="regexp">/.ssh/authorized</span>_keys   hadoop<span class="variable">@slave1</span><span class="symbol">:~/</span>.ssh/</span><br><span class="line">[hadoop<span class="variable">@master</span>  ~]<span class="variable">$ </span> scp  ~<span class="regexp">/.ssh/authorized</span>_keys   hadoop<span class="variable">@slave1</span><span class="symbol">:~/</span>.ssh/</span><br></pre></td></tr></table></figure></p>
+<h2 id="2-Java环境的安装"><a href="#2-Java环境的安装" class="headerlink" title="2.Java环境的安装"></a>2.Java环境的安装</h2><pre><code>下载jdk-8u60-linux-x64.tar.gz安装包后(放在~/bigdataspace路径下)：
+</code></pre>  <figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">	[hadoop@<span class="keyword">master</span> <span class="title">~]$</span> cd  ~/bigdataspace</span><br><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">bigdataspace</span>]$  tar  -zxvf  jdk-<span class="number">8</span>u60-linux-x64.tar.gz</span><br></pre></td></tr></table></figure>
+<p>修改环境变量配置文件:<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master bigdataspace]$ sudo vi /etc/profile</span><br><span class="line"></span><br><span class="line">(在配置文件末尾加上如下配置)</span><br><span class="line"><span class="builtin-name">export</span> <span class="attribute">JAVA_HOME</span>=/home/hadoop/bigdataspace/jdk1.8.0_60</span><br><span class="line"><span class="builtin-name">export</span> <span class="attribute">PATH</span>=<span class="variable">$JAVA_HOME</span>/bin:$PATH</span><br><span class="line"><span class="builtin-name">export</span> <span class="attribute">CLASSPATH</span>=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar</span><br></pre></td></tr></table></figure></p>
+<p>让环境变量设置生效：<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">bigdataspace</span>]$ source /etc/profile</span><br></pre></td></tr></table></figure></p>
+<p>验证Java是否安装成功：<br><figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master <span class="keyword">bigdataspace]$ </span> <span class="keyword">java </span> -version</span><br><span class="line"><span class="keyword">java </span>version <span class="string">"1.8.0_60"</span></span><br><span class="line"><span class="keyword">Java(TM) </span>SE Runtime Environment (<span class="keyword">build </span><span class="number">1</span>.<span class="number">8</span>.<span class="number">0</span>_60-<span class="keyword">b27)</span></span><br><span class="line"><span class="keyword">Java </span>HotSpot(TM) <span class="number">64</span>-<span class="keyword">Bit </span>Server VM (<span class="keyword">build </span><span class="number">25</span>.<span class="number">60</span>-<span class="keyword">b23, </span>mixed mode)</span><br></pre></td></tr></table></figure></p>
+<p>(每台机器上都需要按照上面的操作安装Java)<br>每台机器上执行：<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">~]$</span> sudo chmod <span class="number">777</span> /data/  <span class="comment">#让所有用户可操作/data目录下的数据</span></span><br></pre></td></tr></table></figure></p>
+<h2 id="3-集群上的机器实现同步时间"><a href="#3-集群上的机器实现同步时间" class="headerlink" title="3.集群上的机器实现同步时间"></a>3.集群上的机器实现同步时间</h2><p>检查时间服务是否安装:<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master ~]$ rpm -q ntp</span><br><span class="line">ntp-4.2.6p5-1.el6.centos.x86_64    #这表示已安装了，如果没有安装，这是空白</span><br></pre></td></tr></table></figure></p>
+<p>如果没有安装，需要执行下面的安装命令：<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">~]$</span> sudo yum install ntp</span><br></pre></td></tr></table></figure></p>
+<p>需要配置NTP服务为自启动:<br><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[hadoop<span class="variable">@master</span> ~]<span class="variable">$ </span>sudo chkconfig ntpd on</span><br><span class="line">[hadoop<span class="variable">@master</span> ~]<span class="variable">$ </span>chkconfig --list ntpd</span><br><span class="line">ntpd      <span class="number">0</span><span class="symbol">:off</span>   <span class="number">1</span><span class="symbol">:off</span>   <span class="number">2</span><span class="symbol">:on</span>    <span class="number">3</span><span class="symbol">:on</span>    <span class="number">4</span><span class="symbol">:on</span>    <span class="number">5</span><span class="symbol">:on</span>    <span class="number">6</span><span class="symbol">:off</span></span><br><span class="line"></span><br><span class="line">(需要打开master机器上udp协议的<span class="number">123</span>端口是为了其他节点使用ntpdate通过该端口同步master机器的时间)</span><br><span class="line">[hadoop<span class="variable">@master</span> ~]<span class="variable">$ </span>sudo vi /etc/sysconfig/iptables</span><br><span class="line">(新增的端口配置)</span><br><span class="line">-A INPUT -m state --state NEW -m udp -p udp --dport <span class="number">123</span> -j ACCEPT</span><br><span class="line">[hadoop<span class="variable">@master</span> ~]<span class="variable">$ </span>sudo service iptables restart</span><br></pre></td></tr></table></figure></p>
+<p>在配置前，先使用ntpdate手动同步下时间，免得本机与外部时间服务器时间差距太大，让ntpd不能正常同步。<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master ~]$ sudo ntpdate  pool.ntp.org</span><br><span class="line">26 Apr 17:12:15 ntpdate[7376]: <span class="keyword">step</span> time<span class="built_in"> server </span>202.112.29.82 offset 13.827386 sec</span><br></pre></td></tr></table></figure></p>
+<p>更改master机器上的相关配置文件:<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">~]$</span> sudo  vim  /etc/ntp.conf</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">(下面只显示修改的必要项)</span><br><span class="line"><span class="comment"># Hosts on local network are less restricted.</span></span><br><span class="line">restrict 192.168.1.0 mask 255.255.255.0 nomodify notrap</span><br><span class="line"><span class="comment">#让同一局域网ip段可以进行时间同步：</span></span><br><span class="line">restrict 10.3.19.0 mask 255.255.255.0 nomodify notrap</span><br><span class="line"><span class="comment"># Use public servers from the pool.ntp.org project.</span></span><br><span class="line"><span class="comment"># Please consider joining the pool (http://www.pool.ntp.org/join.html).</span></span><br><span class="line"><span class="comment">#server 0.centos.pool.ntp.org iburst</span></span><br><span class="line"><span class="comment">#server 1.centos.pool.ntp.org iburst</span></span><br><span class="line"><span class="comment">#server 2.centos.pool.ntp.org iburst</span></span><br><span class="line"><span class="comment">#server 3.centos.pool.ntp.org iburst</span></span><br><span class="line"><span class="comment">#外部时间服务器</span></span><br><span class="line">server pool.ntp.org iburst</span><br><span class="line">server 0.asia.pool.ntp.org iburst</span><br><span class="line">server 1.asia.pool.ntp.org iburst</span><br><span class="line">server 1.asia.pool.ntp.org iburst</span><br><span class="line">server 2.asia.pool.ntp.org iburst</span><br><span class="line"><span class="comment">#broadcast 192.168.1.255 autokey        # broadcast server</span></span><br><span class="line"><span class="comment">#broadcastclient                        # broadcast client</span></span><br><span class="line"><span class="comment">#broadcast 224.0.1.1 autokey            # multicast server</span></span><br><span class="line"><span class="comment">#multicastclient 224.0.1.1              # multicast client</span></span><br><span class="line"><span class="comment">#manycastserver 239.255.254.254         # manycast server</span></span><br><span class="line"><span class="comment">#manycastclient 239.255.254.254 autokey # manycast client</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># allow update time by the upper server</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># Undisciplined Local Clock. This is a fake driver intended for backup</span></span><br><span class="line"><span class="comment"># and when no outside source of synchronized time is available.</span></span><br><span class="line"><span class="comment"># 外部时间服务器不可用时，以本地时间作为时间服务</span></span><br><span class="line">server  127.127.1.0</span><br><span class="line">fudge   127.127.1.0 stratum 10</span><br><span class="line"></span><br><span class="line"><span class="comment">#############################################################</span></span><br><span class="line">其他节点/etc/ntp.conf（slave1,slave2,slave3）的配置：</span><br><span class="line">……<span class="built_in">..</span></span><br><span class="line"><span class="comment">#server 3.centos.pool.ntp.org iburst</span></span><br><span class="line"><span class="comment">#外部时间服务器，以master时间为准进行同步</span></span><br><span class="line">server master  iburst</span><br><span class="line">……<span class="built_in">..</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master ~]$ sudo <span class="built_in"> service </span> ntpd  start</span><br><span class="line">(每台机器上都需要，设置ntpd开机启动，并第一次手动打开ntpd)，命令如下：</span><br><span class="line">$  sudo chkconfig ntpd on  #开机启动ntpd</span><br><span class="line">$  sudo<span class="built_in"> service </span>ntpd start  #启动 ntpd</span><br></pre></td></tr></table></figure>
+<p>时间同步设置参考：<a href="http://cn.soulmachine.me/blog/20140124/" target="_blank" rel="noopener">http://cn.soulmachine.me/blog/20140124/</a></p>
+<p>时间同步设置总结：<br>        每个节点上安装ntpd，并设置为开机启动，当然第一次要先手动启动，通过配置/etc/ntp.conf文件，让master作为时间同步服务器，这台机器的时间是根据联网同步网络时间的，其他节点以master的ip作为同步的地址</p>
+<p>配置完成后，发现后面的节点时间可能还未同步，可能需要等30分钟左右，一段时间后时间都会以master为准，进行同步</p>
+<h2 id="4-Hadoop的安装、配置"><a href="#4-Hadoop的安装、配置" class="headerlink" title="4.Hadoop的安装、配置"></a>4.Hadoop的安装、配置</h2><p>下载hadoop-2.6.0-cdh5.5.0.tar.gz安装包后(放在master机器上的~/bigdataspace路径下)：<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">~]$</span> cd  ~/bigdataspace</span><br><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">bigdataspace</span>]$  tar  -zxvf  hadoop-<span class="number">2.6</span>.<span class="number">0</span>-cdh5.<span class="number">5.0</span>.tar.gz</span><br></pre></td></tr></table></figure></p>
+<p>进入hadoop配置文件路径:<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master ~]$ cd  ~/bigdataspace/hadoop<span class="number">-2.6</span><span class="number">.0</span>-cdh5<span class="number">.5</span><span class="number">.0</span>/etc/hadoop</span><br></pre></td></tr></table></figure></p>
+<h3 id="1-gt-在hadoop-env-sh中配置JAVA-HOME："><a href="#1-gt-在hadoop-env-sh中配置JAVA-HOME：" class="headerlink" title="1&gt;    在hadoop-env.sh中配置JAVA_HOME："></a>1&gt;    在hadoop-env.sh中配置JAVA_HOME：</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">hadoop</span>]$ vi  hadoop-env.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight delphi"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># <span class="keyword">set</span> JAVA_HOME <span class="keyword">in</span> this <span class="keyword">file</span>, so that it <span class="keyword">is</span> correctly defined <span class="keyword">on</span></span><br><span class="line"># The java <span class="keyword">implementation</span> <span class="keyword">to</span> use.</span><br><span class="line"><span class="keyword">export</span> JAVA_HOME=/home/hadoop/bigdataspace/jdk1.<span class="number">8.0</span>_60</span><br></pre></td></tr></table></figure>
+<h3 id="2-gt-在yarn-env-sh中配置JAVA-HOME："><a href="#2-gt-在yarn-env-sh中配置JAVA-HOME：" class="headerlink" title="2&gt;    在yarn-env.sh中配置JAVA_HOME："></a>2&gt;    在yarn-env.sh中配置JAVA_HOME：</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">hadoop</span>]$ vi  yarn-env.sh</span><br></pre></td></tr></table></figure>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># some Java parameters</span></span><br><span class="line"><span class="builtin-name">export</span> <span class="attribute">JAVA_HOME</span>=/home/hadoop/bigdataspace/jdk1.8.0_60</span><br></pre></td></tr></table></figure>
+<h3 id="3-gt-在slaves中配置slave节点的ip或者host"><a href="#3-gt-在slaves中配置slave节点的ip或者host" class="headerlink" title="3&gt;    在slaves中配置slave节点的ip或者host"></a>3&gt;    在slaves中配置slave节点的ip或者host</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">hadoop</span>]$ vi  slaves</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">slave1</span><br><span class="line">slave2</span><br><span class="line">slave3</span><br></pre></td></tr></table></figure>
+<h3 id="4-gt-修改core-site-xml"><a href="#4-gt-修改core-site-xml" class="headerlink" title="4&gt;    修改core-site.xml"></a>4&gt;    修改core-site.xml</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">hadoop</span>]$ vi  core-site.xml</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Put site-specific property overrides in this file. --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>fs.defaultFS<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>hdfs://master:8020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.tmp.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>/data/hadoop-2.6.0-cdh5.5.0/tmp<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="5-gt-修改hdfs-site-xml"><a href="#5-gt-修改hdfs-site-xml" class="headerlink" title="5&gt;    修改hdfs-site.xml"></a>5&gt;    修改hdfs-site.xml</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">hadoop</span>]$ vi  hdfs-site.xml</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Put site-specific property overrides in this file. --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:50090<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.name.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/data/hadoop-2.6.0-cdh5.5.0/dfs/name<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.data.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.data.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/data/hadoop-2.6.0-cdh5.5.0/dfs/data<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>3<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="6-gt-修改mapred-site-xml"><a href="#6-gt-修改mapred-site-xml" class="headerlink" title="6&gt;    修改mapred-site.xml"></a>6&gt;    修改mapred-site.xml</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">hadoop</span>]$ vi  mapred-site.xml</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- Put site-specific property overrides in this file. --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.framework.name<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>yarn<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:10020<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:19888<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="7-gt-修改yarn-site-xml"><a href="#7-gt-修改yarn-site-xml" class="headerlink" title="7&gt;    修改yarn-site.xml"></a>7&gt;    修改yarn-site.xml</h3><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">hadoop</span>]$ vi  yarn-site.xml</span><br></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- Site specific YARN configuration properties --&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>mapreduce_shuffle<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.aux-services.mapreduce.shuffle.class<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.mapred.ShuffleHandler<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:8032<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.scheduler.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:8030<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.resource-tracker.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:8031<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.admin.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:8033<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.webapp.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>master:8088<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><em>因为CDH版本缺少hadoop的native库，因此需要引入，否则会报错，解决方法：</em><br><a href="http://www.cnblogs.com/huaxiaoyao/p/5046374.html" target="_blank" rel="noopener">http://www.cnblogs.com/huaxiaoyao/p/5046374.html</a><br>本次安装具体采取的解决方法：<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">~]$</span> cd ~/bigdataspace</span><br><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">bigdataspace</span>]$ wget  http://archive.cloudera.com/cdh5/redhat/<span class="number">6</span>/x86_64/cdh/<span class="number">5.5</span>.<span class="number">0</span>/RPMS/x86_64/hadoop-<span class="number">2.6</span>.<span class="number">0</span>+cdh5.<span class="number">5.0</span>+<span class="number">921</span>-<span class="number">1</span>.cdh5.<span class="number">5.0</span>.p0.<span class="number">15</span>.el6.x86_64.rpm</span><br><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">bigdataspace</span>]$  rpm2cpio *.rpm | cpio -div</span><br></pre></td></tr></table></figure></p>
+<p>在bigdataspace文件夹下<br><figure class="highlight crystal"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ cp -r ./usr/<span class="class"><span class="keyword">lib</span>/<span class="title">hadoop</span>/<span class="title">lib</span>/<span class="title">native</span>/  ~/<span class="title">bigdataspace</span>/<span class="title">hadoop</span>-2.6.0-<span class="title">cdh5</span>.5.0/<span class="title">lib</span>/<span class="title">native</span>/</span></span><br></pre></td></tr></table></figure></p>
+<p>删除解压后得到的文件：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master bigdataspace]$ rm -r ~/bigdataspace/etc/</span><br><span class="line">[hadoop@master bigdataspace]$ rm -r ~/bigdataspace/usr/</span><br><span class="line">[hadoop@master bigdataspace]$ rm -r ~/bigdataspace/var<span class="comment">//</span></span><br><span class="line">$  rm  ~/ bigdataspace/hadoop<span class="number">-2.6</span><span class="number">.0</span>+cdh5<span class="number">.5</span><span class="number">.0</span>+<span class="number">921</span><span class="number">-1.</span>cdh5<span class="number">.5</span><span class="number">.0</span>.p0<span class="number">.15</span>.el6.x86_64.rpm</span><br></pre></td></tr></table></figure></p>
+<h2 id="5-使用scp命令分发配置好的hadoop到各个子节点"><a href="#5-使用scp命令分发配置好的hadoop到各个子节点" class="headerlink" title="5.使用scp命令分发配置好的hadoop到各个子节点"></a>5.使用scp命令分发配置好的hadoop到各个子节点</h2><figure class="highlight elixir"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$ </span> scp  –r  ~<span class="regexp">/bigdataspace/hadoop</span>-<span class="number">2.6</span>.<span class="number">0</span>-cdh5.<span class="number">5.0</span>/  hadoop<span class="variable">@slave1</span><span class="symbol">:~/bigdataspace/</span></span><br><span class="line"><span class="variable">$ </span> scp  –r  ~<span class="regexp">/bigdataspace/hadoop</span>-<span class="number">2.6</span>.<span class="number">0</span>-cdh5.<span class="number">5.0</span>/  hadoop<span class="variable">@slave2</span><span class="symbol">:~/bigdataspace/</span></span><br><span class="line"><span class="variable">$ </span> scp  –r  ~<span class="regexp">/bigdataspace/hadoop</span>-<span class="number">2.6</span>.<span class="number">0</span>-cdh5.<span class="number">5.0</span>/  hadoop<span class="variable">@slave3</span><span class="symbol">:~/bigdataspace/</span></span><br></pre></td></tr></table></figure>
+<p>(每台机器)修改环境变量配置文件:<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">bigdataspace</span>]$ sudo vi /etc/profile</span><br></pre></td></tr></table></figure></p>
+<p>(在配置文件末尾加上如下配置)<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="builtin-name">export</span> <span class="attribute">HADOOP_HOME</span>=/home/hadoop/bigdataspace/hadoop-2.6.0-cdh5.5.0</span><br><span class="line"><span class="builtin-name">export</span> <span class="attribute">PATH</span>=<span class="variable">$JAVA_HOME</span>/bin:$HADOOP_HOME/bin:$PATH</span><br></pre></td></tr></table></figure></p>
+<p>让环境变量设置生效：<br><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">bigdataspace</span>]$ source  /etc/profile</span><br></pre></td></tr></table></figure></p>
+<h2 id="6-启动并验证Hadoop"><a href="#6-启动并验证Hadoop" class="headerlink" title="6.启动并验证Hadoop"></a>6.启动并验证Hadoop</h2><figure class="highlight crmsh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">~]$</span> cd  ~/bigdataspace/hadoop-<span class="number">2.6</span>.<span class="number">0</span>-cdh5.<span class="number">5.0</span>   <span class="comment">#进入hadoop目录</span></span><br><span class="line">  [hadoop@<span class="keyword">master</span> <span class="title">hadoop-2</span>.<span class="number">6.0</span>-cdh5.<span class="number">5.0</span>]$ ./bin/hdfs namenode –format <span class="comment">#格式化namenode</span></span><br><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">hadoop-2</span>.<span class="number">6.0</span>-cdh5.<span class="number">5.0</span>]$ ./sbin/<span class="literal">start</span>-dfs.sh     <span class="comment">#启动dfs</span></span><br><span class="line">[hadoop@<span class="keyword">master</span> <span class="title">hadoop-2</span>.<span class="number">6.0</span>-cdh5.<span class="number">5.0</span>]$ ./sbin/<span class="literal">start</span>-yarn.sh    <span class="comment">#启动yarn</span></span><br></pre></td></tr></table></figure>
+<p>可以通过jps命令查看各个节点启动的进程是否正常。在 master 上应该有以下几个进程<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master hadoop<span class="number">-2.6</span><span class="number">.0</span>-cdh5<span class="number">.5</span><span class="number">.0</span>]$ jps</span><br><span class="line"><span class="number">3407</span> SecondaryNameNode</span><br><span class="line"><span class="number">3218</span> NameNode</span><br><span class="line"><span class="number">3552</span> ResourceManager</span><br><span class="line"><span class="number">3910</span> Jps</span><br></pre></td></tr></table></figure></p>
+<p>在 slave1 上应该有以下几个进程<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@slave1 ~]$ jps</span><br><span class="line"><span class="number">2072</span> NodeManager</span><br><span class="line"><span class="number">2213</span> Jps</span><br><span class="line"><span class="number">1962</span> DataNode</span><br></pre></td></tr></table></figure></p>
+<p><em>或者在浏览器中输入 <a href="http://master:8088" target="_blank" rel="noopener">http://master:8088</a> ，应该有 hadoop 的管理界面出来了,并通过<a href="http://master:8088/cluster/nodes能看到" target="_blank" rel="noopener">http://master:8088/cluster/nodes能看到</a> slave1、slave2、slave3节点</em></p>
+<h2 id="7-启动Hadoop自带的jobhistoryserver"><a href="#7-启动Hadoop自带的jobhistoryserver" class="headerlink" title="7.启动Hadoop自带的jobhistoryserver"></a>7.启动Hadoop自带的jobhistoryserver</h2><p>[hadoop@master ~]$ cd  ~/bigdataspace/hadoop-2.6.0-cdh5.5.0   #进入hadoop目录<br>[hadoop@master hadoop-2.6.0-cdh5.5.0]$ sbin/mr-jobhistory-daemon.sh  start historyserver<br>(mapred-site.xml配置文件有对jobhistory的相关配置)<br>[hadoop@master hadoop-2.6.0-cdh5.5.0]$ jps<br>5314 Jps<br>19994 JobHistoryServer<br>19068 NameNode<br>19422 ResourceManager<br>19263 SecondaryNameNode</p>
+<p>参考：<br><a href="http://blog.csdn.net/liubei_whut/article/details/42397985" target="_blank" rel="noopener">http://blog.csdn.net/liubei_whut/article/details/42397985</a></p>
+<h2 id="8-停止hadoop集群的问题"><a href="#8-停止hadoop集群的问题" class="headerlink" title="8.停止hadoop集群的问题"></a>8.停止hadoop集群的问题</h2><p>Linux运行一段时间后，/tmp下的文件夹下面会清空一些文件，hadoop的停止脚本stop-all.sh是需要根据/tmp下面的pid文件关闭对应的进程，当/tmp下的文件被自动清理后可能会出出先的错误：<br><figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$   ./sbin/<span class="keyword">stop</span>-all.sh</span><br><span class="line">Stopping namenodes <span class="keyword">on</span> [<span class="keyword">master</span>]</span><br><span class="line"><span class="keyword">master</span>: <span class="keyword">no</span> namenode <span class="keyword">to</span> <span class="keyword">stop</span></span><br><span class="line">slave1: <span class="keyword">no</span> datanode <span class="keyword">to</span> <span class="keyword">stop</span></span><br><span class="line">slave2: <span class="keyword">no</span> datanode <span class="keyword">to</span> <span class="keyword">stop</span></span><br><span class="line">slave3: <span class="keyword">no</span> datanode <span class="keyword">to</span> <span class="keyword">stop</span></span><br><span class="line">Stopping secondary namenodes [<span class="keyword">master</span>]</span><br><span class="line"><span class="keyword">master</span>: <span class="keyword">no</span> secondarynamenode <span class="keyword">to</span> <span class="keyword">stop</span></span><br><span class="line">……</span><br></pre></td></tr></table></figure></p>
+<p><em>方法1：这时需要在/tmp文件夹下手动创建恢复这些pid文件</em><br>master节点（每个文件中保存对应的进程id）：<br>hadoop-hadoop-namenode.pid<br>hadoop-hadoop-secondarynamenode.pid<br>yarn-hadoop-resourcemanager.pid<br>slave节点（每个文件中保存对应的进程id）：<br>hadoop-hadoop-datanode.pid<br>yarn-hadoop-nodemanager.pid<br><em>方法2：使用kill -9逐个关闭相应的进程id</em></p>
+<p>从根本上解决的方法：<br>（首先使用了方法1或方法2关闭了hadoop集群）<br>1.修改配置文件hadoop-env.sh:<br><figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#export HADOOP_PID_DIR=$&#123;HADOOP_PID_DIR&#125;</span></span><br><span class="line"><span class="builtin-name">export</span> <span class="attribute">HADOOP_PID_DIR</span>=/data/hadoop-2.6.0-cdh5.5.0/pids</span><br><span class="line"><span class="comment">#export HADOOP_SECURE_DN_PID_DIR=$&#123;HADOOP_PID_DIR&#125;</span></span><br><span class="line"><span class="builtin-name">export</span> <span class="attribute">HADOOP_SECURE_DN_PID_DIR</span>=/data/hadoop-2.6.0-cdh5.5.0/pids</span><br></pre></td></tr></table></figure></p>
+<p>2.修改配置文件yarn-env.sh:<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export YARN_PID_DIR=/data/hadoop<span class="number">-2.6</span><span class="number">.0</span>-cdh5<span class="number">.5</span><span class="number">.0</span>/pids</span><br></pre></td></tr></table></figure></p>
+<p>3.创建文件夹pids：<br><figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$  mkdir /data/hadoop<span class="number">-2.6</span><span class="number">.0</span>-cdh5<span class="number">.5</span><span class="number">.0</span>/pids（发现会自动创建pids文件，因此不需要创建）</span><br></pre></td></tr></table></figure></p>
+<p>这2个步骤需要在各个节点都执行.</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.monbuilder.top/2018/08/09/hadoop/" title="搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]" target="_blank" rel="external">https://blog.monbuilder.top/2018/08/09/hadoop/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/Builder34" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/Builder34" target="_blank"><span class="text-dark">抹布先生M</span><small class="ml-1x">Java Developer &amp; Designer</small></a></h3>
+        <div>纳木错的星空，keep coding...</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/08/16/interview-java2018/" title="2018版Java面试题汇总"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/07/20/conf-os/" title="搭建大数据平台系列(0)-机器准备"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="wechat,weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/Builder34" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2018 Builder Luo
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:blog.monbuilder.top ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+<!-- custom analytics part create by xiamo -->
+<script defer src="https://cdn1.lncld.net/static/js/av-min-1.2.1.js"></script>
+<script defer>
+AV.init({
+  appId: 'nJKeSHNu7uxnF5RoymIFxdrH-gzGzoHsz',
+  appKey: 'mLmwXywaGU4hundj2AJiIaug'
+});
+
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+		var visitors= $('.leancloud_visitors');
+		query.greaterThanOrEqualTo("time", 0);		
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {				
+					return;
+				}
+				var data = results;
+				visitors.each(function(){
+					var url = $(this).attr('id').trim();					
+					for (var i = 0; i < data.length; i++) {
+						var object = data[i];
+						var content = object.get('time');
+						var _url = object.get('url')
+						if(url == _url){
+							$(this).text(content);
+						}
+					}
+				})
+				
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+
+   
+    
+<script src="//cdn.jsdelivr.net/npm/gitment@0.0.3/dist/gitment.browser.min.js"></script>
+<script>
+var gitment = new Gitment({
+  // id默认为当前页面url，如果url后带参数或锚点，gitment要重新初始化
+  // https://github.com/imsun/gitment/issues/55
+  // 解决方案：id:window.location.pathname,或者将id设置为当前页面标题
+  id: '搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]', 
+  owner: 'Builder34', // 可以是你的GitHub用户名，也可以是github id
+  repo: 'builder34.github.io',
+  oauth: {
+    client_id: '0a360f3e08aa3da02166fa4b2563e9bf0842741a',
+    client_secret: '0a360f3e08aa3da02166fa4b2563e9bf0842741a',
+  }
+})
+gitment.render('comments')
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>
