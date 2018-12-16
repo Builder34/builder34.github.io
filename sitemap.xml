@@ -2,6 +2,48 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://blog.monbuilder.top/index.html</loc>
+    
+    <lastmod>2018-12-16T10:26:27.591Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.monbuilder.top/repository/index.html</loc>
+    
+    <lastmod>2018-12-16T10:26:27.590Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.monbuilder.top/links/index.html</loc>
+    
+    <lastmod>2018-12-16T10:26:27.590Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.monbuilder.top/books/index.html</loc>
+    
+    <lastmod>2018-12-16T10:26:27.589Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.monbuilder.top/categories/index.html</loc>
+    
+    <lastmod>2018-12-16T10:26:27.588Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://blog.monbuilder.top/about/index.html</loc>
+    
+    <lastmod>2018-12-16T10:26:27.588Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://blog.monbuilder.top/2018/11/05/zookeeper/</loc>
     
     <lastmod>2018-12-14T06:14:20.400Z</lastmod>
