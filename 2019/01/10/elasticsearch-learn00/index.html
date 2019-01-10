@@ -17,21 +17,21 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>搭建大数据平台系列(0)-机器准备 | 抹布先生M</title>
-  <meta name="description" content="0. 前期规划假设现在有四台机器，各自ip如下:1234192.168.1.201192.168.1.202192.168.1.203192.168.1.204 安装下面统一要求进行重装系统：  每台机器的系统为：CentOS-6.5-x86_64 每台机器的磁盘分区为： 1234/boot      : 系统引导分区/          : 系统安装区/data       : 系统数据分区（s">
-<meta name="keywords" content="CentOS 防火墙">
+  <title>Elasticsearch学习教程系列(0)-入门与安装 | 抹布先生M</title>
+  <meta name="description" content="本教程是基于Elasticsearch6.5版本编写下面将介绍、安装并启动Elasticsearch，查看其中的内容以及执行索引，搜索和修改数据等基本操作的过程。在本教程结束时，您应该很好地了解Elasticsearch是什么，它是如何工作的，并希望能够获得灵感，看看如何使用它来构建复杂的搜索应用程序或从数据中挖掘智能。 0.1入门简介Elasticsearch是一个高度可扩展的开源全文搜索和分析">
+<meta name="keywords" content="Elasticsearch 搜索">
 <meta property="og:type" content="article">
-<meta property="og:title" content="搭建大数据平台系列(0)-机器准备">
-<meta property="og:url" content="https://blog.monbuilder.top/2018/07/20/conf-os/index.html">
+<meta property="og:title" content="Elasticsearch学习教程系列(0)-入门与安装">
+<meta property="og:url" content="https://blog.monbuilder.top/2019/01/10/elasticsearch-learn00/index.html">
 <meta property="og:site_name" content="抹布先生M">
-<meta property="og:description" content="0. 前期规划假设现在有四台机器，各自ip如下:1234192.168.1.201192.168.1.202192.168.1.203192.168.1.204 安装下面统一要求进行重装系统：  每台机器的系统为：CentOS-6.5-x86_64 每台机器的磁盘分区为： 1234/boot      : 系统引导分区/          : 系统安装区/data       : 系统数据分区（s">
+<meta property="og:description" content="本教程是基于Elasticsearch6.5版本编写下面将介绍、安装并启动Elasticsearch，查看其中的内容以及执行索引，搜索和修改数据等基本操作的过程。在本教程结束时，您应该很好地了解Elasticsearch是什么，它是如何工作的，并希望能够获得灵感，看看如何使用它来构建复杂的搜索应用程序或从数据中挖掘智能。 0.1入门简介Elasticsearch是一个高度可扩展的开源全文搜索和分析">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2018-12-14T06:14:20.376Z">
+<meta property="og:updated_time" content="2019-01-10T14:44:31.487Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="搭建大数据平台系列(0)-机器准备">
-<meta name="twitter:description" content="0. 前期规划假设现在有四台机器，各自ip如下:1234192.168.1.201192.168.1.202192.168.1.203192.168.1.204 安装下面统一要求进行重装系统：  每台机器的系统为：CentOS-6.5-x86_64 每台机器的磁盘分区为： 1234/boot      : 系统引导分区/          : 系统安装区/data       : 系统数据分区（s">
+<meta name="twitter:title" content="Elasticsearch学习教程系列(0)-入门与安装">
+<meta name="twitter:description" content="本教程是基于Elasticsearch6.5版本编写下面将介绍、安装并启动Elasticsearch，查看其中的内容以及执行索引，搜索和修改数据等基本操作的过程。在本教程结束时，您应该很好地了解Elasticsearch是什么，它是如何工作的，并希望能够获得灵感，看看如何使用它来构建复杂的搜索应用程序或从数据中挖掘智能。 0.1入门简介Elasticsearch是一个高度可扩展的开源全文搜索和分析">
   <!-- Canonical links -->
-  <link rel="canonical" href="https://blog.monbuilder.top/2018/07/20/conf-os/index.html">
+  <link rel="canonical" href="https://blog.monbuilder.top/2019/01/10/elasticsearch-learn00/index.html">
   
     <link rel="alternate" href="/atom.xml" title="抹布先生M" type="application/atom+xml">
   
@@ -324,14 +324,14 @@
   
 <main class="main" role="main">
   <div class="content">
-  <article id="post-conf-os" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+  <article id="post-elasticsearch-learn00" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
     
     <div class="article-header">
       
         
   
     <h1 class="article-title" itemprop="name">
-      搭建大数据平台系列(0)-机器准备
+      Elasticsearch学习教程系列(0)-入门与安装
     </h1>
   
 
@@ -339,20 +339,20 @@
       <div class="article-meta">
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
-	<a href="/2018/07/20/conf-os/" class="article-date">
-	  <time datetime="2018-07-20T05:16:05.000Z" itemprop="datePublished">2018-07-20</time>
+	<a href="/2019/01/10/elasticsearch-learn00/" class="article-date">
+	  <time datetime="2019-01-10T14:34:05.000Z" itemprop="datePublished">2019-01-10</time>
 	</a>
 </span>
         
   <span class="article-category">
     <i class="icon icon-folder"></i>
-    <a class="article-category-link" href="/categories/大数据/">大数据</a>
+    <a class="article-category-link" href="/categories/搜索引擎/">搜索引擎</a>
   </span>
 
         
   <span class="article-tag">
     <i class="icon icon-tags"></i>
-	<a class="article-tag-link" href="/tags/Hadoop/">Hadoop</a>
+	<a class="article-tag-link" href="/tags/Elasticsearch/">Elasticsearch</a>
   </span>
 
 
@@ -360,47 +360,35 @@
 
 	<span class="article-read hidden-xs">
     	<i class="icon icon-eye-fill" aria-hidden="true"></i>
-    	<span id="/2018/07/20/conf-os/" class="leancloud_visitors"  data-flag-title="搭建大数据平台系列(0)-机器准备">0</span>
+    	<span id="/2019/01/10/elasticsearch-learn00/" class="leancloud_visitors"  data-flag-title="Elasticsearch学习教程系列(0)-入门与安装">0</span>
     </span>
 
-        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/07/20/conf-os/#comments" class="article-comment-link">评论</a></span>
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/01/10/elasticsearch-learn00/#comments" class="article-comment-link">评论</a></span>
         
 	
-		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 602(字)</span>
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2.5k(字)</span>
 	
 	
-		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 2(分)</span>
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 9(分)</span>
 	
 
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <h2 id="0-前期规划"><a href="#0-前期规划" class="headerlink" title="0. 前期规划"></a>0. 前期规划</h2><p>假设现在有四台机器，各自ip如下:<br><figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.1</span><span class="selector-class">.201</span></span><br><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.1</span><span class="selector-class">.202</span></span><br><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.1</span><span class="selector-class">.203</span></span><br><span class="line">192<span class="selector-class">.168</span><span class="selector-class">.1</span><span class="selector-class">.204</span></span><br></pre></td></tr></table></figure></p>
-<p>安装下面统一要求进行重装系统：</p>
-<ol>
-<li>每台机器的系统为：CentOS-6.5-x86_64</li>
-<li><p>每台机器的磁盘分区为：</p>
-<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">/boot      : 系统引导分区</span><br><span class="line">/          : 系统安装区</span><br><span class="line">/data       : 系统数据分区</span><br><span class="line">（swap分区尚未建立，待机器内存不足需求时再建立）</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>每台机器上安装的都是Mininal Desktop版本</p>
-</li>
-<li>每台机器的主机名(hostname)分别为：master、slave1、slave2、slave3</li>
-<li>每台机器的root密码都是:master</li>
-<li>每台机器上建立的第一个非root用户都为:hadoop，密码为:hadoop</li>
-<li>非root用户在centos中获取sudo权限的命令：<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@slave3 ~]$ su -   #切换到root用户，需要输入root密码</span><br><span class="line">[root@slave3 ~]# visudo -f /etc/sudoers</span><br><span class="line">## Allow root to run <span class="built_in">any</span> commands anywhere</span><br><span class="line">root    <span class="built_in">ALL</span>=(<span class="built_in">ALL</span>)       <span class="built_in">ALL</span></span><br><span class="line">在上面这条文字下加上如下：</span><br><span class="line">hadoop  <span class="built_in">ALL</span>=(<span class="built_in">ALL</span>)       <span class="built_in">ALL</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>这样配置后，hadoop用户可以使用sudo命令了</p>
-<ol start="8">
-<li>修改每台机器的/etc/hosts文件，如：<figure class="highlight lsl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@slave3 ~]$ sudo vi /etc/hosts</span><br><span class="line"><span class="number">192.168</span><span class="number">.1</span><span class="number">.201</span> master</span><br><span class="line"><span class="number">192.168</span><span class="number">.1</span><span class="number">.202</span> slave1</span><br><span class="line"><span class="number">192.168</span><span class="number">.1</span><span class="number">.203</span> slave2</span><br><span class="line"><span class="number">192.168</span><span class="number">.1</span><span class="number">.204</span> slave3</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>9.防火墙设置</p>
+        <p><em>本教程是基于Elasticsearch6.5版本编写</em><br>下面将介绍、安装并启动Elasticsearch，查看其中的内容以及执行索引，搜索和修改数据等基本操作的过程。在本教程结束时，您应该很好地了解Elasticsearch是什么，它是如何工作的，并希望能够获得灵感，看看如何使用它来构建复杂的搜索应用程序或从数据中挖掘智能。</p>
+<h2 id="0-1入门简介"><a href="#0-1入门简介" class="headerlink" title="0.1入门简介"></a>0.1入门简介</h2><p>Elasticsearch是一个高度可扩展的开源全文搜索和分析引擎。Elasticsearch基于Apache Lucene，它允许您快速，近实时地存储，搜索和分析大量数据。它通常用作与底层引擎/技术，提供了一个分布式多用户能力的全文搜索引擎，基于RESTful web接口；为具有复杂搜索功能和要求的应用程序提供支持。<br>以下是Elasticsearch可用于的一些场景示例：</p>
 <ul>
-<li>因为4台机器组成的大数据平台小集群需要互相访问对方的多个端口，需要在防火墙中打开这些端口的访问（如果未打开的话），当然最方便的就是把每台机器上的防火墙关闭了。<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[hadoop@master  ~]$  sudo <span class="built_in"> service </span> iptables  start     #打开防火墙</span><br><span class="line">[hadoop@master  ~]$  sudo <span class="built_in"> service </span> iptables  status    #查看防火墙</span><br><span class="line">[hadoop@master  ~]$  sudo <span class="built_in"> service </span> iptables  stop      #关闭防火墙</span><br><span class="line">(注意：防火墙操作时需要root权限的，非root用户不使用sudo的话，不会报错，但操作无结果)</span><br><span class="line">修改防火墙设置(红色为新增配置：开放2000-6000,7000以上的端口):</span><br><span class="line">[hadoop@master ~]$ sudo  vim  /etc/sysconfig/iptables</span><br><span class="line"><span class="comment"># Firewall configuration written by system-config-firewall</span></span><br><span class="line"><span class="comment"># Manual customization of this file is not recommended.</span></span><br><span class="line"><span class="number">*f</span>ilter</span><br><span class="line">:INPUT ACCEPT [0:0]</span><br><span class="line">:FORWARD ACCEPT [0:0]</span><br><span class="line">:OUTPUT ACCEPT [0:0]</span><br><span class="line">-A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT</span><br><span class="line">-A INPUT -p icmp -j ACCEPT</span><br><span class="line">-A INPUT -i lo -j ACCEPT</span><br><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 22 -j ACCEPT</span><br><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 2000:6000 -j ACCEPT</span><br><span class="line">-A INPUT -m state --state NEW -m tcp -p tcp --dport 7000: -j ACCEPT</span><br><span class="line">-A INPUT -j REJECT --reject-with icmp-host-prohibited</span><br><span class="line">-A FORWARD -j REJECT --reject-with icmp-host-prohibited</span><br><span class="line">COMMIT</span><br><span class="line"></span><br><span class="line">保存上面的文件后，需要重启防火墙，让配置生效！</span><br><span class="line">[hadoop@master  ~]$  sudo <span class="built_in"> service </span> iptables  restart     #重启防火墙</span><br></pre></td></tr></table></figure>
-</li>
+<li>您运行在线网上商店，允许您的客户搜索您销售的产品。在这种情况下，您可以使用Elasticsearch存储整个产品目录和库存，并为它们提供搜索和自动填充建议。</li>
+<li>您希望收集日志或交易数据，并且希望分析和挖掘此数据以查找趋势，统计信息，摘要或异常。在这种情况下，您可以使用Logstash（Elasticsearch / Logstash / Kibana堆栈的一部分）来收集，聚合和解析数据，然后让Logstash将此数据提供给Elasticsearch。一旦数据在Elasticsearch中，您就可以运行搜索和聚合来挖掘您感兴趣的任何信息。</li>
+<li>您运行价格警报平台，允许精通价格的客户指定一条规则，例如“我有兴趣购买特定的电子产品，如果小工具的价格在下个月内从任何供应商降至X美元以下，我希望收到通知” 。在这种情况下，您可以刮取供应商价格，将其推入Elasticsearch并使用其反向搜索（Percolator）功能来匹配价格变动与客户查询，并最终在发现匹配后将警报推送给客户。</li>
+<li>您有分析/业务智能需求，并希望快速调查，分析，可视化并询问有关大量数据的特定问题（想想数百万或数十亿条记录）。在这种情况下，您可以使用Elasticsearch存储数据，然后使用Kibana（Elasticsearch / Logstash / Kibana堆栈的一部分）构建自定义仪表板，以便可视化对您来说重要的数据方面。此外，您可以使用Elasticsearch聚合功能针对您的数据执行复杂的商业智能查询。<h2 id="0-2基本概念"><a href="#0-2基本概念" class="headerlink" title="0.2基本概念"></a>0.2基本概念</h2><strong>有一些概念是Elasticsearch的核心。从一开始就理解这些概念将极大地帮助简化学习过程。</strong><br><em>1.近实时(NRT)</em><br>Elasticsearch是一个近实时搜索平台。这意味着从索引文档到可搜索文档的时间有一点延迟（通常是一秒）。<br><em>2.集群(cluster)</em><br>集群是一个或多个节点（服务器）的集合，它们共同保存您的整个数据，并提供跨所有节点的联合索引和搜索功能。群集由唯一名称标识，默认情况下为“elasticsearch”。此名称很重要，因为如果节点设置为按名称加入群集，则该节点只能是群集的一部分。确保不要在不同的环境中重用相同的群集名称，否则最终会导致节点加入错误的群集。例如，您可以使用logging-dev，logging-stage以及logging-prod 用于开发，登台和生产集群。请注意，如果群集中只有一个节点，那么它是完全正常的。此外，您还可以拥有多个独立的集群，每个集群都有自己唯一的集群名称。<br><em>3.节点(node)</em><br>节点是作为群集一部分的单个服务器，存储数据并参与群集的索引和搜索功能。就像集群一样，节点由名称标识，默认情况下，该名称是在启动时分配给节点的随机通用唯一标识符（UUID）。如果不需要默认值，可以定义所需的任何节点名称。此名称对于管理目的非常重要，您可以在其中识别网络中哪些服务器与Elasticsearch集群中的哪些节点相对应。可以将节点配置为按群集名称加入特定群集。默认情况下，每个节点都设置为加入一个名为cluster的集群elasticsearch，这意味着如果您在网络上启动了许多节点并且假设它们可以相互发现 - 它们将自动形成并加入一个名为的集群elasticsearch。在单个群集中，您可以拥有任意数量的节点。此外，如果您的网络上当前没有其他Elasticsearch节点正在运行，则默认情况下启动单个节点将形成一个名为的新单节点集群elasticsearch。<br><em>4.索引(index)</em><br>索引是具有某些类似特征的文档集合。例如，您可以拥有客户数据的索引，产品目录的另一个索引以及订单数据的另一个索引。索引由名称标识（必须全部小写），此名称用于在对其中的文档执行索引，搜索，更新和删除操作时引用索引。在单个群集中，您可以根据需要定义任意数量的索引。<br><em>5.文档(document)</em><br>文档是可以编制索引的基本信息单元。例如，您可以为单个客户提供文档，为单个产品提供另一个文档，为单个订单提供另一个文档。该文档以JSON（JavaScript Object Notation）表示，JSON是一种普遍存在的互联网数据交换格式。在索引/类型中，您可以根据需要存储任意数量的文档。请注意，尽管文档实际上驻留在索引中，但实际上必须将文档编入索引/分配给索引中的类型。<br><em>6.分片和副本(Shards &amp; Replicas)</em><br>索引可能存储大量可能超过单个节点的硬件限制的数据。例如，占用1TB磁盘空间的十亿个文档的单个索引可能不适合单个节点的磁盘，或者可能太慢而无法单独从单个节点提供搜索请求。为了解决这个问题，Elasticsearch提供了将索引细分为多个称为分片的功能。创建索引时，只需定义所需的分片数即可。每个分片本身都是一个功能齐全且独立的“索引”，可以托管在集群中的任何节点上。<br>分片很重要，主要有两个原因：</li>
+<li>它允许您水平拆分/缩放内容量</li>
+<li>它允许您跨分片（可能在多个节点上）分布和并行化操作，从而提高性能/吞吐量<br>分片的分布方式以及如何将其文档聚合回搜索请求的机制完全由Elasticsearch管理，对用户而言是透明的。在可以随时发生故障的网络/云环境中，非常有用，强烈建议使用故障转移机制，以防分片/节点以某种方式脱机或因任何原因消失。为此，Elasticsearch允许您将索引的分片的一个或多个副本制作成所谓的副本分片或简称副本。<br>复制很重要，主要有两个原因：</li>
+<li>它在碎片/节点发生故障时提供高可用性。因此，请务必注意，副本分片永远不会在与从中复制的原始/主分片相同的节点上分配。</li>
+<li>它允许您扩展搜索量/吞吐量，因为可以在所有副本上并行执行搜索。<br>总而言之，每个索引可以拆分为多个分片。索引也可以复制为零（表示没有副本）或更多次。复制后，每个索引都将具有主分片（从中复制的原始分片）和副本分片（主分片的副本）。可以在创建索引时为每个索引定义分片和副本的数量。创建索引后，您还可以随时动态更改副本数。您可以使用_shrink和_splitAPI 更改现有索引的分片数，但这不是一项简单的任务，并且预先计划正确数量的分片是最佳方法。默认情况下，Elasticsearch中的每个索引都分配了5个主分片和1个副本，这意味着如果群集中至少有两个节点，则索引将包含5个主分片和另外5个副本分片（1个完整副本），总计为每个索引10个分片。<br><code>Tips:  每个Elasticsearch分片都是Lucene索引。单个Lucene索引中可以包含最大数量的文档。截止LUCENE-5843，限制是2,147,483,519（= Integer.MAX_VALUE - 128）文档。您可以使用_cat/shardsAPI 监控分片大小。</code><h2 id="0-3安装"><a href="#0-3安装" class="headerlink" title="0.3安装"></a>0.3安装</h2>Elasticsearch是基于Java开发的，因此安装时，需要JDK环境。我们安装的版本是Elasticsearch6.5.4，至少需要JDK 8。我们假设您已经在您的Linux(例如CentOS6.5)环境下已经安装了JDK。<br>  [builder@master ~]$ java -version<br>  java version “1.8.0_171”<br>  Java(TM) SE Runtime Environment (build 1.8.0_171-b11)<br>  Java HotSpot(TM) 64-Bit Server VM (build 25.171-b11, mixed mode)<br>下载安装包，并解压：<br>  [builder@master ~]$ cd ~<br>  [builder@master ~]$ mdkir env<br>  [builder@master ~]$ cd env<br>  [builder@master ~]$ wget <a href="https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.5.4.tar.gz" target="_blank" rel="noopener">https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.5.4.tar.gz</a><br>   #等待下载完成后，解压<br>  [builder@master ~]$ tar -zxvf elasticsearch-6.5.4.tar.gz<br>  [builder@master ~]$ cd elasticsearch-6.5.4<h1 id="在elasticsearch命令后加-d-参数，是指以守护线程启动程序，即是后台运行"><a href="#在elasticsearch命令后加-d-参数，是指以守护线程启动程序，即是后台运行" class="headerlink" title="在elasticsearch命令后加 -d 参数，是指以守护线程启动程序，即是后台运行"></a>在elasticsearch命令后加 -d 参数，是指以守护线程启动程序，即是后台运行</h1>  [builder@master ~]$ ./bin/elasticsearch -d</li>
 </ul>
+<p>到这里Elasticsearch的安装已经完成了，是不是非常简单呢？<br>另外，我们启动的时候是可以通过 -E 参数指定集群名称(cluster.name)或者节点名称(node.name)的：<br>    [builder@master ~]$ ./bin/elasticsearch -Ecluster.name=esCluster -Enode.name=builder01  -d<br><code>Tips:   默认情况下，Elasticsearch使用port 9200来提供对其REST API的访问。如有必要，可以配置此端口。</code></p>
 
       
     </div>
@@ -410,7 +398,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://blog.monbuilder.top/2018/07/20/conf-os/" title="搭建大数据平台系列(0)-机器准备" target="_blank" rel="external">https://blog.monbuilder.top/2018/07/20/conf-os/</a>
+      <a href="https://blog.monbuilder.top/2019/01/10/elasticsearch-learn00/" title="Elasticsearch学习教程系列(0)-入门与安装" target="_blank" rel="external">https://blog.monbuilder.top/2019/01/10/elasticsearch-learn00/</a>
     </li>
     
     <li class="post-copyright-license">
@@ -456,13 +444,9 @@
   
   <ul class="pager pull-left">
     
-    <li class="prev">
-      <a href="/2018/08/09/hadoop/" title="搭建大数据平台系列(1)-Hadoop环境搭建[hdfs,yarn,mapreduce]"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
-    </li>
-    
     
     <li class="next">
-      <a href="/2018/06/22/build-blog/" title="Hexo+Github Page搭建个人博客"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+      <a href="/2018/12/13/hbase/" title="搭建大数据平台系列(3)-hbase环境搭建"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
     </li>
     
     
@@ -692,7 +676,7 @@ var gitment = new Gitment({
   // id默认为当前页面url，如果url后带参数或锚点，gitment要重新初始化
   // https://github.com/imsun/gitment/issues/55
   // 解决方案：id:window.location.pathname,或者将id设置为当前页面标题
-  id: '搭建大数据平台系列(0)-机器准备', 
+  id: 'Elasticsearch学习教程系列(0)-入门与安装', 
   owner: 'Builder34', // 可以是你的GitHub用户名，也可以是github id
   repo: 'builder34.github.io',
   oauth: {
