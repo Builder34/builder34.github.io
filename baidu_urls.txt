@@ -1,3 +1,4 @@
+https://blog.monbuilder.top/2019/03/06/hive/
 https://blog.monbuilder.top/2019/01/10/elasticsearch-learn00/
 https://blog.monbuilder.top/2018/12/13/hbase/
 https://blog.monbuilder.top/2018/11/05/zookeeper/
