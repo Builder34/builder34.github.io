@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Elasticsearch学习教程系列(1)-命令学习(一) 集群健康、索引、文档操作 | 抹布先生M</title>
+  <meta name="description" content="本教程是基于Elasticsearch6.5版本编写在本系列教程上一篇文章中，我们介绍了Elasticsearch的一些基本概念、安装并运行起了一个Elasticsearch节点。现在我们已经启动并运行了节点（集群），下一步是了解如何与它进行通信。幸运的是，Elasticsearch提供了一个非常全面和强大的REST API，您可以使用它与集群进行交互。使用API 可以完成的一些事项如下：  检查">
+<meta name="keywords" content="Elasticsearch 搜索">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Elasticsearch学习教程系列(1)-命令学习(一) 集群健康、索引、文档操作">
+<meta property="og:url" content="https://blog.monbuilder.top/2019/03/14/elasticsearch-learn01/index.html">
+<meta property="og:site_name" content="抹布先生M">
+<meta property="og:description" content="本教程是基于Elasticsearch6.5版本编写在本系列教程上一篇文章中，我们介绍了Elasticsearch的一些基本概念、安装并运行起了一个Elasticsearch节点。现在我们已经启动并运行了节点（集群），下一步是了解如何与它进行通信。幸运的是，Elasticsearch提供了一个非常全面和强大的REST API，您可以使用它与集群进行交互。使用API 可以完成的一些事项如下：  检查">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:updated_time" content="2019-03-14T03:07:38.915Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Elasticsearch学习教程系列(1)-命令学习(一) 集群健康、索引、文档操作">
+<meta name="twitter:description" content="本教程是基于Elasticsearch6.5版本编写在本系列教程上一篇文章中，我们介绍了Elasticsearch的一些基本概念、安装并运行起了一个Elasticsearch节点。现在我们已经启动并运行了节点（集群），下一步是了解如何与它进行通信。幸运的是，Elasticsearch提供了一个非常全面和强大的REST API，您可以使用它与集群进行交互。使用API 可以完成的一些事项如下：  检查">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://blog.monbuilder.top/2019/03/14/elasticsearch-learn01/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="抹布先生M" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+  
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitment@0.0.3/style/default.min.css">
+  
+  
+    <link href="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.css" rel="stylesheet">
+  
+  
+</head>
+
+
+<body class="main-center theme-green" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://blog.monbuilder.top" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">抹布先生M</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Java Developer &amp; Kindhearted People</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Guangzhou, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav menu-highlight">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/Builder34" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <div><img src="/images/wx_account.png" width="180" height="180"></div><p>欢迎关注微信公众号交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/搜索引擎/">搜索引擎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/03/14/elasticsearch-learn01/" class="title">Elasticsearch学习教程系列(1)-命令学习(一) 集群健康、索引、文档操作</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-14T04:15:22.000Z" itemprop="datePublished">2019-03-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/大数据/">大数据</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/03/06/hive/" class="title">搭建大数据平台系列(4)-hive环境搭建</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-03-06T14:19:33.000Z" itemprop="datePublished">2019-03-06</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/搜索引擎/">搜索引擎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2019/01/10/elasticsearch-learn00/" class="title">Elasticsearch学习教程系列(0)-入门与安装</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2019-01-10T14:34:05.000Z" itemprop="datePublished">2019-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/大数据/">大数据</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/12/13/hbase/" class="title">搭建大数据平台系列(3)-hbase环境搭建</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-12-13T09:21:59.000Z" itemprop="datePublished">2018-12-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/大数据/">大数据</a>
+              </p>
+              <p class="item-title">
+                <a href="/2018/11/05/zookeeper/" class="title">搭建大数据平台系列(2)-zookeeper环境搭建</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2018-11-05T08:08:10.000Z" itemprop="datePublished">2018-11-05</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/hexo博客/">hexo博客</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/webSphere/">webSphere</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/大数据/">大数据</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/搜索引擎/">搜索引擎</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/消息中间件/">消息中间件</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/面试/">面试</a><span class="category-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Elasticsearch/" style="font-size: 13.5px;">Elasticsearch</a> <a href="/tags/Hadoop/" style="font-size: 14px;">Hadoop</a> <a href="/tags/Java面试/" style="font-size: 13px;">Java面试</a> <a href="/tags/hexo/" style="font-size: 13px;">hexo</a> <a href="/tags/rabbitMQ-分布式/" style="font-size: 13px;">rabbitMQ 分布式</a> <a href="/tags/性能监控/" style="font-size: 13px;">性能监控</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/07/">七月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li></ul>
+    </div>
+  </div>
+
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-elasticsearch-learn01" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Elasticsearch学习教程系列(1)-命令学习(一) 集群健康、索引、文档操作
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/03/14/elasticsearch-learn01/" class="article-date">
+	  <time datetime="2019-03-14T04:15:22.000Z" itemprop="datePublished">2019-03-14</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/搜索引擎/">搜索引擎</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link" href="/tags/Elasticsearch/">Elasticsearch</a>
+  </span>
+
+
+        
+
+	<span class="article-read hidden-xs">
+    	<i class="icon icon-eye-fill" aria-hidden="true"></i>
+    	<span id="/2019/03/14/elasticsearch-learn01/" class="leancloud_visitors"  data-flag-title="Elasticsearch学习教程系列(1)-命令学习(一) 集群健康、索引、文档操作">0</span>
+    </span>
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/03/14/elasticsearch-learn01/#comments" class="article-comment-link">评论</a></span>
+        
+	
+		<span class="post-wordcount hidden-xs" itemprop="wordCount">字数统计: 2.5k(字)</span>
+	
+	
+		<span class="post-readcount hidden-xs" itemprop="timeRequired">阅读时长: 10(分)</span>
+	
+
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p><em>本教程是基于Elasticsearch6.5版本编写</em><br>在本系列教程上一篇文章中，我们介绍了Elasticsearch的一些基本概念、安装并运行起了一个Elasticsearch节点。现在我们已经启动并运行了节点（集群），下一步是了解如何与它进行通信。幸运的是，Elasticsearch提供了一个非常全面和强大的REST API，您可以使用它与集群进行交互。使用API 可以完成的一些事项如下：</p>
+<ul>
+<li>检查集群运行情况，状态和统计信息</li>
+<li>管理您的群集，节点和索引数据和元数据</li>
+<li>对索引执行CRUD（创建，读取，更新和删除）和搜索操作</li>
+<li>执行高级搜索操作，例如分页，排序，过滤，脚本编写，聚合等等</li>
+</ul>
+<h2 id="集群运行情况-Cluster-Health"><a href="#集群运行情况-Cluster-Health" class="headerlink" title="集群运行情况(Cluster Health)"></a>集群运行情况(Cluster Health)</h2><p>让我们从基本运行状况检查开始，我们可以使用它来查看集群的运行情况。我们将使用curl来执行此操作，但您可以使用任何允许您进行HTTP / REST调用的工具。假设我们仍然在我们启动Elasticsearch的同一节点上打开另一个命令shell窗口。<br>‘’[builder@master ~]$ curl -X GET “<a href="http://localhost:9200/_cat/health?v&quot;" target="_blank" rel="noopener">http://localhost:9200/_cat/health?v&quot;</a><br>‘’ epoch      timestamp cluster       status node.total node.data shards pri relo init unassign pending_tasks max_task_wait_time active_shards_percent<br>‘’ 1547394013 15:40:13  elasticsearch green           1         1      0   0    0    0        0             0                  -                100.0%<br>‘’<br>我们可以看到名为“elasticsearch”的群集处于green(绿色)状态。<br>每当我们要求群集健康时，我们要么获得绿色，黄色或红色。</p>
+<blockquote>
+<p>绿色 - 一切都很好（集群功能齐全）<br>黄色 - 所有数据均可用，但尚未分配一些副本（群集功能齐全）<br>红色 - 某些数据由于某种原因不可用（群集部分功能）<br><strong>注意：当群集为红色时，它将继续提供来自可用分片的搜索请求，但您可能需要尽快修复它，因为存在未分配的分片。</strong><br>同样从上面的响应中，我们可以看到总共1个节点，并且我们有0个分片，因为我们还没有数据。请注意，由于我们使用的是默认群集名称（elasticsearch），并且由于Elasticsearch默认使用单播网络发现来查找同一台计算机上的其他节点，因此您可能会意外启动计算机上的多个节点并将它们所有都加入一个集群。在这种情况下，您可能会在上面的响应中看到多个节点。<br>查看集群中的节点列表：<br>‘’[builder@master ]$ curl -X GET “<a href="http://localhost:9200/_cat/nodes?v&quot;" target="_blank" rel="noopener">http://localhost:9200/_cat/nodes?v&quot;</a><br>‘’ ip        heap.percent ram.percent cpu load_1m load_5m load_15m node.role master name<br>‘’ 127.0.0.1           20          98   8    1.90                  mdi       *      siwsSwZ<br>从上面的结果中，我们可以看到一个名为“siwsSwZ”的节点，它是我们集群中当前的单个节点。</p>
+</blockquote>
+<h2 id="索引-indices-的CRUD、查询操作"><a href="#索引-indices-的CRUD、查询操作" class="headerlink" title="索引(indices)的CRUD、查询操作"></a>索引(indices)的CRUD、查询操作</h2><p>查看索引列表：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[builder@master ~]$ curl -X GET <span class="string">"http://localhost:9200/_cat/indices?v"</span></span><br><span class="line">health status index uuid pri rep docs.count docs.deleted store.size pri.store.size</span><br></pre></td></tr></table></figure>
+<p>因为我们的节点是刚刚建立的，还没数据，所以上面查询的结果只有一行字段名，没有索引数据</p>
+<h3 id="创建索引"><a href="#创建索引" class="headerlink" title="创建索引"></a>创建索引</h3><p>现在让我们创建一个名为“customer”的索引，然后再次列出所有索引（下面第一个命令使用PUT动词创建名为“customer”的索引。加?pretty表示返回的结果打印格式化过的JSON（如果有的话）。）：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[builder@master ~]$ curl -X PUT <span class="string">"localhost:9200/customer?pretty"</span></span><br><span class="line"> &#123;</span><br><span class="line">   <span class="string">"acknowledged"</span> : <span class="literal">true</span>,</span><br><span class="line">   <span class="string">"shards_acknowledged"</span> : <span class="literal">true</span>,</span><br><span class="line">   <span class="string">"index"</span> : <span class="string">"customer"</span></span><br><span class="line"> &#125;</span><br><span class="line">[builder@master ~]$ curl -X GET <span class="string">"localhost:9200/_cat/indices?v"</span></span><br><span class="line">health status index    uuid                   pri rep docs.count docs.deleted store.size pri.store.size</span><br><span class="line">yellow open   customer i7R-XRH8R0Kn7uLQRNC_yQ   5   1          0            0      1.1kb          1.1kb</span><br></pre></td></tr></table></figure>
+<p>第二个命令的结果告诉我们，我们现在有一个名为customer的索引，它有5个主分片和1个副本（默认值），并且它包含0个文档。<br>您可能还注意到客户索引标记了黄色运行状况。回想一下我们之前的讨论，黄色表示某些副本尚未（尚未）分配。此索引发生这种情况的原因是因为默认情况下Elasticsearch为此索引创建了一个副本。由于我们目前只有一个节点在运行，因此在另一个节点加入集群的较晚时间点之前，尚无法分配一个副本（用于高可用性）。将该副本分配到第二个节点后，此索引的运行状况将变为绿色。</p>
+<p><em>Tips: 上面命令中，-X PUT 后的路径不要带http哟，否则会出现如下错误的：</em></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[builder@master ~]$ curl -X PUT <span class="string">"http://localhost:9200/_cat/customer1?pretty"</span></span><br><span class="line"> &#123;</span><br><span class="line">   <span class="string">"error"</span> : <span class="string">"Incorrect HTTP method for uri [/_cat/customer1?pretty] and method [PUT], allowed: [POST]"</span>,</span><br><span class="line">   <span class="string">"status"</span> : 405</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="查询文档"><a href="#查询文档" class="headerlink" title="查询文档"></a>查询文档</h3><p>现在让我们在customer索引中加入一些内容。我们将一个简单的客户文档索引到客户索引中，ID为1，如下所示：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[builder@master ~]$  curl -X PUT  <span class="string">"localhost:9200/customer/_doc/1?pretty"</span> -H <span class="string">"Content-Type:application/json"</span> -d <span class="string">'&#123; "name": "Builder Luo"&#125;'</span> </span><br><span class="line"> &#123;</span><br><span class="line">   <span class="string">"_index"</span> : <span class="string">"customer"</span>,</span><br><span class="line">   <span class="string">"_type"</span> : <span class="string">"_doc"</span>,</span><br><span class="line">   <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">   <span class="string">"_version"</span> : 1,</span><br><span class="line">   <span class="string">"result"</span> : <span class="string">"created"</span>,</span><br><span class="line">   <span class="string">"_shards"</span> : &#123;</span><br><span class="line">     <span class="string">"total"</span> : 2,</span><br><span class="line">     <span class="string">"successful"</span> : 1,</span><br><span class="line">     <span class="string">"failed"</span> : 0</span><br><span class="line">   &#125;,</span><br><span class="line">   <span class="string">"_seq_no"</span> : 0,</span><br><span class="line">   <span class="string">"_primary_term"</span> : 2</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>curl命令说明：-X为请求方式，-H 参数为设置请求头，-d参数为请求参数 。<br>‘’ Tips:   关于：路径localhost:9200/customer/_doc/1?pretty<br>‘’ localhost:9200/customer是之前创建的索引，后接/_doc/1表示为在customer索引上创建1个ID为1的文档(?pretty表示将返回的响应json格式化美观)<br><strong>提示：值得注意的是，Elasticsearch在你将文档编入索引之前不需要先显式创建索引。在前面的示例中，如果customer索引事先尚未存在，则Elasticsearch将自动创建customer索引。</strong><br>查看刚刚创建好的文档:</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[builder@master ~]$ curl -X GET <span class="string">"localhost:9200/customer/_doc/1?pretty"</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="string">"_index"</span> : <span class="string">"customer"</span>,</span><br><span class="line">   <span class="string">"_type"</span> : <span class="string">"_doc"</span>,</span><br><span class="line">   <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">   <span class="string">"_version"</span> : 1,</span><br><span class="line">   <span class="string">"found"</span> : <span class="literal">true</span>,</span><br><span class="line">   <span class="string">"_source"</span> : &#123;</span><br><span class="line">     <span class="string">"name"</span> : <span class="string">"Builder Luo"</span></span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="删除索引"><a href="#删除索引" class="headerlink" title="删除索引"></a>删除索引</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[builder@master ~]$ curl -X DELETE <span class="string">"localhost:9200/customer?pretty"</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="string">"acknowledged"</span> : <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line">[builder@master ~]$  curl -X GET <span class="string">"localhost:9200/_cat/indices?v"</span></span><br><span class="line">health status index uuid pri rep docs.count docs.deleted store.size pri.store.size</span><br></pre></td></tr></table></figure>
+<p>上面意味着索引已成功删除，我们现在回到我们在集群中没有任何内容的地方。<br>在我们继续之前，让我们再仔细看看到目前为止我们学到的一些API命令：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">curl -X PUT <span class="string">''</span>localhost:9200/customer<span class="string">''</span></span><br><span class="line">curl -X GET <span class="string">''</span>localhost:9200/customer<span class="string">''</span></span><br><span class="line">curl -X DELETE <span class="string">''</span>localhost:9200/customer<span class="string">''</span></span><br><span class="line"></span><br><span class="line">curl -X PUT <span class="string">''</span>localhost:9200/customer/_doc/1<span class="string">''</span>  -H <span class="string">"Content-Type:application/json"</span> -d <span class="string">'&#123; "name": "Builder Luo"&#125;'</span></span><br><span class="line">curl -X GET <span class="string">''</span>localhost:9200/customer/_doc/1<span class="string">''</span></span><br><span class="line">curl -X DELETE <span class="string">''</span>localhost:9200/customer/_doc/1<span class="string">''</span></span><br></pre></td></tr></table></figure>
+<p>如果我们仔细研究上述命令，我们实际上可以看到我们如何在Elasticsearch中访问数据的模式。该模式可归纳如下：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;HTTP Verb&gt;        Node_address/&lt;Index&gt;/&lt;Type&gt;/&lt;ID&gt;</span><br></pre></td></tr></table></figure>
+<p>这种REST访问模式在所有API命令中都非常普遍，如果你能记住它，你将在掌握Elasticsearch方面有一个良好的开端。</p>
+<h3 id="替换文档"><a href="#替换文档" class="headerlink" title="替换文档"></a>替换文档</h3><p>Elasticsearch几乎实时提供数据操作和搜索功能。默认情况下，从索引/更新/删除数据到搜索结果中显示的时间，您可能会有一秒钟的延迟（刷新间隔）。<br>数据在事务完成后立即可用，这是Elasticsearch与SQL等其他平台的重要区别<br>之前，我们执行过如下命令：</p>
+<figure class="highlight 1c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">''[builder@master <span class="symbol">~]$  curl -X PUT  "localhost</span>:<span class="number">9200</span>/customer/_doc/<span class="number">1</span>?pretty<span class="string">" -H "</span>Content-Type:application/json<span class="string">" -d '&#123; "</span>name<span class="string">": "</span>Builder Luo<span class="string">"&#125;' </span></span><br><span class="line">下面，我们执行一样的命令，文档ID还是指定为<span class="number">1</span>，只是-d参数内容有变化：</span><br><span class="line">''[builder@master <span class="symbol">~]$  curl -X PUT  "localhost</span>:<span class="number">9200</span>/customer/_doc/<span class="number">1</span>?pretty<span class="string">" -H "</span>Content-Type:application/json<span class="string">" -d '&#123; "</span>name<span class="string">": "</span>Baby Mon<span class="string">"&#125;' </span></span><br><span class="line">''&#123;</span><br><span class="line">''   <span class="string">"_index"</span> : <span class="string">"customer"</span>,</span><br><span class="line">''   <span class="string">"_type"</span> : <span class="string">"_doc"</span>,</span><br><span class="line">''   <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">''   <span class="string">"_version"</span> : <span class="number">2</span>,</span><br><span class="line">''   <span class="string">"result"</span> : <span class="string">"updated"</span>,</span><br><span class="line">''   <span class="string">"_shards"</span> : &#123;</span><br><span class="line">''     <span class="string">"total"</span> : <span class="number">2</span>,</span><br><span class="line">''     <span class="string">"successful"</span> : <span class="number">1</span>,</span><br><span class="line">''     <span class="string">"failed"</span> : <span class="number">0</span></span><br><span class="line">''   &#125;,</span><br><span class="line">''   <span class="string">"_seq_no"</span> : <span class="number">1</span>,</span><br><span class="line">''   <span class="string">"_primary_term"</span> : <span class="number">1</span></span><br><span class="line">'' &#125;</span><br></pre></td></tr></table></figure>
+<p>以上内容将ID为1的文档名称从“Builder Luo”更改为“Baby Mon”, result字段值为: updated。另一方面，如果我们使用不同的ID，则会对新文档编制索引，并且索引中已有的现有文档保持不变。<br><em>索引时，ID部分是可选的。如果未指定，Elasticsearch将生成随机ID，然后使用它来索引文档。Elasticsearch生成的实际ID（或前面示例中显式指定的内容）将作为索引API调用的一部分返回。</em><br>此示例显示如何在没有显式ID的情况下索引文档：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[builder@master ~]$  curl -X POST  <span class="string">"localhost:9200/customer/_doc?pretty"</span> -H <span class="string">"Content-Type:application/json"</span> -d <span class="string">'&#123; "name": "Moonlight Chen"&#125;'</span></span><br><span class="line"> &#123;</span><br><span class="line">   <span class="string">"_index"</span> : <span class="string">"customer"</span>,</span><br><span class="line">   <span class="string">"_type"</span> : <span class="string">"_doc"</span>,</span><br><span class="line">   <span class="string">"_id"</span> : <span class="string">"UmGaVGgBol3Y-BIhbtd0"</span>,</span><br><span class="line">   <span class="string">"_version"</span> : 1,</span><br><span class="line">   <span class="string">"result"</span> : <span class="string">"created"</span>,</span><br><span class="line">   <span class="string">"_shards"</span> : &#123;</span><br><span class="line">     <span class="string">"total"</span> : 2,</span><br><span class="line">     <span class="string">"successful"</span> : 1,</span><br><span class="line">     <span class="string">"failed"</span> : 0</span><br><span class="line">   &#125;,</span><br><span class="line">   <span class="string">"_seq_no"</span> : 0,</span><br><span class="line">   <span class="string">"_primary_term"</span> : 1</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到上面自动生成的ID是：UmGaVGgBol3Y-BIhbtd0<br><strong>请注意，在上面的情况中，我们使用POST动词而不是PUT，因为我们没有指定ID。</strong></p>
+<h3 id="修改文档数据"><a href="#修改文档数据" class="headerlink" title="修改文档数据"></a>修改文档数据</h3><p>除了能够重新索引和替换文档，我们还可以更新文档数据。（请注意，Elasticsearch实际上并没有在内部进行就地更新。每当我们进行更新时，Elasticsearch都会删除旧文档，然后一次性对应用了更新的新文档编制索引。）</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># -d参数，需要封装成： &#123; "doc": &#123;dataJSON&#125;&#125;</span></span><br><span class="line">[builder@master ~]$  curl -X POST  <span class="string">"localhost:9200/customer/_doc/1/_update?pretty"</span> -H <span class="string">"Content-Type:application/json"</span> -d <span class="string">'&#123; "doc": &#123; "name": "My Baby Mon",  "age": 20&#125; &#125;'</span> </span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">"_index"</span> : <span class="string">"customer"</span>,</span><br><span class="line">    <span class="string">"_type"</span> : <span class="string">"_doc"</span>,</span><br><span class="line">    <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">    <span class="string">"_version"</span> : 4,</span><br><span class="line">    <span class="string">"result"</span> : <span class="string">"updated"</span>,</span><br><span class="line">    <span class="string">"_shards"</span> : &#123;</span><br><span class="line">        <span class="string">"total"</span> : 2,</span><br><span class="line">        <span class="string">"successful"</span> : 1,</span><br><span class="line">        <span class="string">"failed"</span> : 0</span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"_seq_no"</span> : 3,</span><br><span class="line">    <span class="string">"_primary_term"</span> : 1</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 也可以使用简单脚本执行更新。此示例使用脚本将年龄增加5：</span></span><br><span class="line">[builder@master ~]$  curl -X POST  <span class="string">"localhost:9200/customer/_doc/1/_update?pretty"</span> -H <span class="string">"Content-Type:application/json"</span> -d <span class="string">'&#123; "script":  "ctx._source.age += 5" &#125;'</span></span><br><span class="line">&#123;</span><br><span class="line">   <span class="string">"_index"</span> : <span class="string">"customer"</span>,</span><br><span class="line">   <span class="string">"_type"</span> : <span class="string">"_doc"</span>,</span><br><span class="line">   <span class="string">"_id"</span> : <span class="string">"1"</span>,</span><br><span class="line">   <span class="string">"_version"</span> : 5,</span><br><span class="line">   <span class="string">"result"</span> : <span class="string">"updated"</span>,</span><br><span class="line">   <span class="string">"_shards"</span> : &#123;</span><br><span class="line">     <span class="string">"total"</span> : 2,</span><br><span class="line">     <span class="string">"successful"</span> : 1,</span><br><span class="line">     <span class="string">"failed"</span> : 0</span><br><span class="line">   &#125;,</span><br><span class="line">   <span class="string">"_seq_no"</span> : 4,</span><br><span class="line">   <span class="string">"_primary_term"</span> : 1</span><br><span class="line"> &#125;</span><br><span class="line"><span class="comment"># 在上面的示例中，ctx._source指的是即将更新的当前源文档。</span></span><br></pre></td></tr></table></figure>
+<p>Elasticsearch提供了在给定查询条件（如SQL UPDATE-WHERE语句）的情况下更新多个文档的功能。请参阅[docs-update-by-queryAPI[<a href="https://www.elastic.co/guide/en/elasticsearch/reference/6.5/docs-update-by-query.html]]" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/6.5/docs-update-by-query.html]]</a><br>本文到这里，我们主要介绍了Elasticsearch的索引、文档的一些主要命令，我们将在下一篇文章中介绍Elasticsearch的批处理命令、以及探索操作数据的命令</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://blog.monbuilder.top/2019/03/14/elasticsearch-learn01/" title="Elasticsearch学习教程系列(1)-命令学习(一) 集群健康、索引、文档操作" target="_blank" rel="external">https://blog.monbuilder.top/2019/03/14/elasticsearch-learn01/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://blog.monbuilder.top" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://blog.monbuilder.top" target="_blank"><span class="text-dark">抹布先生M</span><small class="ml-1x">Java Developer &amp; Kindhearted People</small></a></h3>
+        <div>纳木错的星空，keep coding...</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    
+    <li class="next">
+      <a href="/2019/03/06/hive/" title="搭建大数据平台系列(4)-hive环境搭建"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="wechat,weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/Builder34" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        &copy; 2019 Builder Luo
+        
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+<script src="/js/plugin.min.js"></script>
+<script src="/js/application.js"></script>
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+<script src="/js/insight.js"></script>
+
+
+    <script>
+(function ($) {
+    $('.search-form').on('submit', function (e) {
+        var keyword = $('.search-form-input[name="wd"]').val();
+        window.location = 'https://www.baidu.com/s?wd=site:blog.monbuilder.top ' + keyword;
+        return false;
+    });
+})(jQuery);
+</script>
+
+
+
+
+   
+
+
+<!-- custom analytics part create by xiamo -->
+<script defer src="https://cdn1.lncld.net/static/js/av-min-1.2.1.js"></script>
+<script defer>
+AV.init({
+  appId: 'nJKeSHNu7uxnF5RoymIFxdrH-gzGzoHsz',
+  appKey: 'mLmwXywaGU4hundj2AJiIaug'
+});
+
+function showTime(Counter) {
+	var query = new AV.Query(Counter);
+		var visitors= $('.leancloud_visitors');
+		query.greaterThanOrEqualTo("time", 0);		
+		query.find({
+			success: function(results) {
+				if (results.length == 0) {				
+					return;
+				}
+				var data = results;
+				visitors.each(function(){
+					var url = $(this).attr('id').trim();					
+					for (var i = 0; i < data.length; i++) {
+						var object = data[i];
+						var content = object.get('time');
+						var _url = object.get('url')
+						if(url == _url){
+							$(this).text(content);
+						}
+					}
+				})
+				
+			},
+			error: function(object, error) {
+				console.log("Error: " + error.code + " " + error.message);
+			}
+		});
+}
+
+function addCount(Counter) {
+	var Counter = AV.Object.extend("Counter");
+	url = $(".leancloud_visitors").attr('id').trim();
+	title = $(".leancloud_visitors").attr('data-flag-title').trim();
+	var query = new AV.Query(Counter);
+	query.equalTo("url", url);
+	query.find({
+		success: function(results) {
+			if (results.length > 0) {
+				var counter = results[0];
+				counter.fetchWhenSave(true);
+				counter.increment("time");
+				counter.save(null, {
+					success: function(counter) {
+						var content = counter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(counter, error) {
+						console.log('Failed to save Visitor num, with error message: ' + error.message);
+					}
+				});
+			} else {
+				var newcounter = new Counter();
+				newcounter.set("title", title);
+				newcounter.set("url", url);
+				newcounter.set("time", 1);
+				newcounter.save(null, {
+					success: function(newcounter) {
+					    console.log("newcounter.get('time')="+newcounter.get('time'));
+						var content = newcounter.get('time');
+						$(document.getElementById(url)).text(content);
+					},
+					error: function(newcounter, error) {
+						console.log('Failed to create');
+					}
+				});
+			}
+		},
+		error: function(error) {
+			console.log('Error:' + error.code + " " + error.message);
+		}
+	});
+}
+$(function() {
+	var Counter = AV.Object.extend("Counter");
+	if ($('.leancloud_visitors').length == 1) {
+		addCount(Counter);
+	} else {
+		showTime(Counter);
+	}
+}); 
+</script>
+
+
+
+   
+    
+<script src="//cdn.jsdelivr.net/npm/gitment@0.0.3/dist/gitment.browser.min.js"></script>
+<script>
+var gitment = new Gitment({
+  // id默认为当前页面url，如果url后带参数或锚点，gitment要重新初始化
+  // https://github.com/imsun/gitment/issues/55
+  // 解决方案：id:window.location.pathname,或者将id设置为当前页面标题
+  id: 'Elasticsearch学习教程系列(1)-命令学习(一) 集群健康、索引、文档操作', 
+  owner: 'Builder34', // 可以是你的GitHub用户名，也可以是github id
+  repo: 'builder34.github.io',
+  oauth: {
+    client_id: '0a360f3e08aa3da02166fa4b2563e9bf0842741a',
+    client_secret: '0a360f3e08aa3da02166fa4b2563e9bf0842741a',
+  }
+})
+gitment.render('comments')
+</script>
+
+
+
+
+
+  <script src="//cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.3.5/dist/jquery.fancybox.min.js"></script>
+  <script>
+  //利用 FancyBox 实现点击图片放大
+  $(document).ready(function() {
+    $('article img').not('[hidden]').not('.panel-body img').each(function() {
+      var $image = $(this);
+      var imageCaption = $image.attr('alt');
+      var $imageWrapLink = $image.parent('a');
+      if ($imageWrapLink.length < 1) {
+        var src = this.getAttribute('src');
+        var idx = src.lastIndexOf('?');
+        if (idx != -1) {
+          src = src.substring(0, idx);
+        }
+        $imageWrapLink = $image.wrap('<a href="' + src + '"></a>').parent('a');
+      }
+      $imageWrapLink.attr('data-fancybox', 'images');
+      if (imageCaption) {
+        $imageWrapLink.attr('data-caption', imageCaption);
+      }
+    });
+    $().fancybox({
+      selector: '[data-fancybox="images"]',
+      hash: false,
+      loop: false,
+    });
+  });
+  </script>
+
+
+
+
+
+</body>
+</html>
